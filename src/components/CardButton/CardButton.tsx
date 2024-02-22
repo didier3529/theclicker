@@ -1,12 +1,7 @@
-import {ClickerButton} from './CardButton.styles.ts';
-import React, {SetStateAction} from 'react';
+import {ClickerButton} from './CardButton.styles.ts'; // стили
+import {ClickerProps} from '../../types.ts'; // типы
 
-type CardButtonProps = {
-	setClickCount: React.Dispatch<SetStateAction<number>>;
-	clickCount: number;
-}
-
-export const CardButton = ({clickCount, setClickCount}: CardButtonProps) => {
+export const CardButton = ({clickCount, setClickCount}: ClickerProps) => {
 
 	const handleButtonClick = () => {
 		setClickCount(clickCount + 1);

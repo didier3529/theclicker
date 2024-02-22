@@ -1,8 +1,12 @@
 :root {
-	font-family: 'Ubuntu Mono', serif;
+	font-family: 'BigBlueTerm437 Nerd Font', sans-serif;
 	color: #5d5d5d;
+	background-color: #FEFEFE;
 }
 
 button {
+	background: none;
 	border: none;
+	outline: none;
+	box-shadow: none;
 }
