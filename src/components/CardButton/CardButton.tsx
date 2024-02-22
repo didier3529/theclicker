@@ -1,8 +1,12 @@
 import {ClickerButton} from './CardButton.styles.ts';
-import React, {useState} from 'react';
+import React, {SetStateAction} from 'react';
 
-export const CardButton: React.FC = () => {
-	const [clickCount, setClickCount] = useState<number>(0);
+type CardButtonProps = {
+	setClickCount: React.Dispatch<SetStateAction<number>>;
+	clickCount: number;
+}
+
+export const CardButton = ({clickCount, setClickCount}: CardButtonProps) => {
 
 	const handleButtonClick = () => {
 		setClickCount(clickCount + 1);
@@ -10,8 +14,7 @@ export const CardButton: React.FC = () => {
 
 	return (
 		<>
-				<ClickerButton onClick={handleButtonClick}/>
-				<p style={{display: 'flex'}}>count: {clickCount}</p>
+			<ClickerButton onClick={handleButtonClick}/>
 		</>
 	);
 };

@@ -1,13 +1,8 @@
-@media (prefers-color-scheme: light) {
-	:root {
-		color: #213547;
-		background-color: #ffffff;
-	}
-	a:hover {
-		color: #747bff;
-	}
+:root {
+	font-family: 'Ubuntu Mono', serif;
+	color: #5d5d5d;
 }
 
-:root {
-	background-color: #ecdcc6;
+button {
+	border: none;
 }

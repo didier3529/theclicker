@@ -1,18 +1,19 @@
 import styled from '@emotion/styled';
 
 export const ClickerButton = styled.button`
-	width: 300px;
-	height: 300px;
-	border-radius: 20px;
+	width: 18em;
+	height: 18em;
 	background-size: cover;
-	background-image: url('src/assets/deli_karimova.jpg');
-	display: flex;
-	justify-content: center;
+	background-image: url('src/assets/boykisser.jpg');
+	//border-radius: 20px;
+	//display: flex;
+	//justify-content: center;
 
 	&:hover {
-		transition: all 1.5s ease;
-		border: 2px solid #a9a4cc;
-		transform: scale(1.03);
-		box-shadow: 0px 0px 30px #a9a4cc;
+		transition: all 0.1s linear;
+		border: none;
+		transform: scale(1.08);
+		//border: 2px solid #9d9d9d;
+		//box-shadow: 0px 0px 30px #9d9d9d;
 	}
 `;

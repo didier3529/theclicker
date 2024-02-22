@@ -8,13 +8,13 @@ export const AppWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	height: 100vh;
+	height: 40vh;
 `;
 
 export const ClickerContainer = styled.div`
 	position: relative;
-	width: 100vw;
-	height: 60vh;
+	width: 35vw;
+	height: 35vh;
 	overflow: hidden;
 	perspective: 1000px;
 `
@@ -29,23 +29,20 @@ export const RotationWrapper = styled(motion.div)`
 `;
 
 export const CardWrapper = styled(motion.div)`
-	border-radius: 20px;
+	//border-radius: 20px;
 	backdrop-filter: blur(3px) brightness(120%);
 	
 	&:active {
-		transition: all 0.35s ease-out;
-		transform: scale(1.10);
+		transition: all 0.03s linear;
+		transform: scale(1.05);
 	}
 `;
 
 export const MotionGrid = styled.div`
 	position: absolute;
-	width: 100%;
-	height: 100%;
+	width: 10%;
+	height: 10%;
 	background-size: ${SIZE}px ${SIZE}px;
-	background-image: radial-gradient(circle at 1px 1px,
-	#91857a 2px,
-	transparent 0);
 	background-position: center;
 	transform: translateZ(-500px);
 `;

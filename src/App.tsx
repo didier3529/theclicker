@@ -1,13 +1,14 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {useEffect} from 'react';
 import {animate, useMotionValue, useTransform} from 'framer-motion';
 import {CardButton} from './components/CardButton/CardButton.tsx';
-// Стили
+// стили
 import {AppWrapper, CardWrapper, ClickerContainer, MotionGrid, RotationWrapper} from './App.styles.ts';
 
 const App: React.FC = () => {
+	const [clickCount, setClickCount] = useState<number>(0);
 
-	// Позиция курсора
+	// позиция курсора
 	const mouseX = useMotionValue(
 		typeof window !== 'undefined' ? window.innerWidth / 2 : 0
 	);
@@ -15,16 +16,15 @@ const App: React.FC = () => {
 		typeof window !== 'undefined' ? window.innerHeight / 2 : 0
 	);
 
-// Создание handleMouseMove
 	useEffect(() => {
 		const handleMouseMove = (e: MouseEvent) => {
-			// Анимация по X и Y
+			// анимация по X и Y
 			animate(mouseX, e.clientX);
 			animate(mouseY, e.clientY);
 		};
 		if (typeof window === 'undefined') return;
 		window.addEventListener('mousemove', handleMouseMove);
-		// Очистка
+		// очистка
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove);
 		};
@@ -46,18 +46,18 @@ const App: React.FC = () => {
 		return newRotateY / dampen;
 	});
 
-// ...
-
 	return (
 		<AppWrapper>
 			<ClickerContainer>
 				<RotationWrapper style={{rotateX, rotateY}}>
 					<MotionGrid/>
 					<CardWrapper ref={cardRef}>
-						<CardButton/>
+						<CardButton setClickCount={setClickCount} clickCount={clickCount}/>
 					</CardWrapper>
 				</RotationWrapper>
 			</ClickerContainer>
+			<p style={{display: 'flex', fontSize: '1.5em'}}>count: {clickCount}</p>
+			<hr style={{width: '40em', color: '#9d9d9d'}}/>
 		</AppWrapper>
 	);
 };
