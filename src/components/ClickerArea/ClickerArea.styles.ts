@@ -4,14 +4,22 @@ import {motion} from 'framer-motion';
 const SIZE = 60;
 
 export const ClickerContainer = styled.div`
+	@media screen and (max-width: 450px) {
+		width: 80%;
+	}
 	position: relative;
-	width: 50vw;
-	height: 50vh;
+	width: 50%;
+	height: 50%;
 	overflow: hidden;
 	perspective: 1000px;
+	min-height: 200px;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
 `
 
 export const RotationWrapper = styled(motion.div)`
+	
 	width: 100%;
 	height: 100%;
 	display: flex;

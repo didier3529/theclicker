@@ -11,12 +11,14 @@ const App: React.FC = () => {
 
 	return (
 		<>
-			<Wrapper>
-				<ClickerArea clickCount={clickCount} setClickCount={setClickCount}/>
-			</Wrapper>
-			<Wrapper>
-				<ControlArea setClickCount={setClickCount} clickCount={clickCount}/>
-			</Wrapper>
+			<div style={{height: '100%'}}>
+				<Wrapper>
+					<ClickerArea clickCount={clickCount} setClickCount={setClickCount}/>
+				</Wrapper>
+				<Wrapper>
+					<ControlArea setClickCount={setClickCount} clickCount={clickCount}/>
+				</Wrapper>
+			</div>
 		</>
 	);
 };

@@ -1,7 +1,11 @@
 :root {
+	@media screen and (max-width:450px) {
+		font-size: 0.8em;
+	}
 	font-family: 'BigBlueTerm437 Nerd Font', sans-serif;
 	color: #5d5d5d;
 	background-color: #FEFEFE;
+	height: 100%;
 }
 
 button {

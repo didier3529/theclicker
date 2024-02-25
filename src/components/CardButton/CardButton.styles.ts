@@ -3,8 +3,10 @@ import styled from '@emotion/styled';
 export const ClickerButton = styled.button`
 	width: 18em;
 	height: 18em;
-	background-size: cover;
 	background-image: url('src/assets/boykisser.jpg');
+	background-size: 18em;
+	background-position: center;
+	background-repeat: no-repeat;
 	//border-radius: 20px;
 	//display: flex;
 	//justify-content: center;

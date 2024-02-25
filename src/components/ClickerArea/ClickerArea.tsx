@@ -2,7 +2,8 @@ import {CardButton} from '../CardButton/CardButton.tsx';
 import {useEffect, useRef} from 'react';
 import {animate, useMotionValue, useTransform} from 'framer-motion';
 import {CardWrapper, ClickerContainer, MotionGrid, RotationWrapper} from './ClickerArea.styles.ts';
-import {ClickerProps} from '../../types.ts'; // стили
+import {ClickerProps} from '../../types.ts';
+import {Wrapper} from '../../App.styles.ts'; // стили
 
 export const ClickerArea = ({ clickCount, setClickCount}: ClickerProps) => {
 	// позиция курсора
@@ -56,9 +57,11 @@ export const ClickerArea = ({ clickCount, setClickCount}: ClickerProps) => {
 						<CardButton setClickCount={setClickCount} clickCount={clickCount}/>
 					</CardWrapper>
 				</RotationWrapper>
+				<Wrapper>
+					<p style={{marginBottom: '20px', fontSize: '1.5em', textAlign: 'center'}}>{clickCount}</p>
+					<hr style={{padding: '0px', margin: '0px', width: '25vw', minWidth: '400px', color: '#9d9d9d'}}/>
+				</Wrapper>
 			</ClickerContainer>
-			<p style={{marginBottom: '20px', display: 'flex', fontSize: '1.5em'}}>{clickCount}</p>
-			<hr style={{padding: '0px', margin: '0px', width: '25vw', minWidth: '400px', color: '#9d9d9d'}}/>
 		</>
 	);
 };
