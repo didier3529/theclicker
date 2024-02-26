@@ -1,7 +1,7 @@
 import {ClickerButton} from './CardButton.styles.ts'; // стили
-import {ClickerProps} from '../../types.ts'; // типы
+import {ClickerAreaProps} from '../../types.ts'; // типы
 
-export const CardButton = ({clickCount, setClickCount}: ClickerProps) => {
+export const CardButton = ({clickCount, setClickCount}: ClickerAreaProps) => {
 
 	const handleButtonClick = () => {
 		setClickCount(clickCount + 1);

@@ -41,7 +41,7 @@ export const CardWrapper = styled(motion.div)`
 export const MotionGrid = styled.div`
 	position: absolute;
 	width: 10%;
-	height: 10%;
+	height: 20%;
 	background-size: ${SIZE}px ${SIZE}px;
 	background-position: center;
 	transform: translateZ(-500px);

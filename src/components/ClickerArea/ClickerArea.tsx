@@ -2,10 +2,10 @@ import {CardButton} from '../CardButton/CardButton.tsx';
 import {useEffect, useRef} from 'react';
 import {animate, useMotionValue, useTransform} from 'framer-motion';
 import {CardWrapper, ClickerContainer, MotionGrid, RotationWrapper} from './ClickerArea.styles.ts';
-import {ClickerProps} from '../../types.ts';
+import {ClickerAreaProps} from '../../types.ts';
 import {Wrapper} from '../../App.styles.ts'; // стили
 
-export const ClickerArea = ({ clickCount, setClickCount}: ClickerProps) => {
+export const ClickerArea = ({ clickCount, setClickCount}: ClickerAreaProps) => {
 	// позиция курсора
 	const mouseX = useMotionValue(
 		typeof window !== 'undefined' ? window.innerWidth / 2 : 0
@@ -58,8 +58,8 @@ export const ClickerArea = ({ clickCount, setClickCount}: ClickerProps) => {
 					</CardWrapper>
 				</RotationWrapper>
 				<Wrapper>
-					<p style={{marginBottom: '20px', fontSize: '1.5em', textAlign: 'center'}}>{clickCount}</p>
-					<hr style={{padding: '0px', margin: '0px', width: '25vw', minWidth: '400px', color: '#9d9d9d'}}/>
+					<p style={{marginBottom: '15px', fontSize: '2em', textAlign: 'center'}}>{clickCount}</p>
+					<hr className='hr' style={{padding: '0px', margin: '0px', width: '30vw', minWidth: '400px', border: 'none', color: '#5d5d5d', height: '3px', backgroundColor: '#5d5d5d'}}/>
 				</Wrapper>
 			</ClickerContainer>
 		</>

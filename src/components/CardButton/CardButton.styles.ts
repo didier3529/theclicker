@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 
 export const ClickerButton = styled.button`
-	width: 18em;
-	height: 18em;
-	background-image: url('src/assets/boykisser.jpg');
-	background-size: 18em;
-	background-position: center;
+	width: 20em;
+	height: 22em;
+	background-image: url('src/assets/boykisser.png');
+	background-size: 22em;
+	background-position: bottom;
 	background-repeat: no-repeat;
+	margin-top: 4em;
 	//border-radius: 20px;
 	//display: flex;
 	//justify-content: center;

@@ -3,9 +3,38 @@
 		font-size: 0.8em;
 	}
 	font-family: 'BigBlueTerm437 Nerd Font', sans-serif;
-	color: #5d5d5d;
-	background-color: #FEFEFE;
 	height: 100%;
+	width: 100%;
+	box-sizing: border-box;
+}
+:root[data-theme = 'light'] {
+	.inactiveSwitch {
+		color: #797979;
+	}
+	color: #5d5d5d;
+	background-color: #f8f4ef;
+}
+:root[data-theme = 'dark'] {
+	.inactiveSwitch {
+		color: #c0c0bf;
+	}
+	.hr {
+		background-color: #FEFEFE !important;
+		color: #f8f4ef !important;
+	}
+	color: #FEFEFE;
+	background-color: #484747;
+}
+
+.inactiveSwitch {
+	font-size: 0.9em;
+	margin-top: 0.1em;
+	font-weight: normal;
+	cursor: pointer;
+}
+
+body {
+	margin: 0 auto;
 }
 
 button {

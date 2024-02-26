@@ -1,5 +1,5 @@
 import React from 'react';
-import {ModalContent, ModalWrapper} from './Modal.styles.ts';
+import {ModalContent} from './Modal.styles.ts';
 import {Transition} from 'react-transition-group';
 import {Wrapper} from '../../App.styles.ts';
 
@@ -15,11 +15,9 @@ export const Modal = ({modalIsOpen, setModalIsOpen, children}: ModalProps) => {
 			<Transition in={modalIsOpen} timeout={350} unmountOnExit={true}>
 				{(state) => (
 					<Wrapper onClick={() => setModalIsOpen(false)} style={{transition: 'opacity 0.3s'}} className={`modal-${state}`}>
-						<ModalWrapper>
-							<ModalContent>
-								{children}
-							</ModalContent>
-						</ModalWrapper>
+						<ModalContent>
+							{children}
+						</ModalContent>
 					</Wrapper>
 				)}
 			</Transition>
