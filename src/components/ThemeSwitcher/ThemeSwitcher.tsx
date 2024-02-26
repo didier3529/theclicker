@@ -15,12 +15,12 @@ export const ThemeSwitcher = ({isDark, setIsDark}: ThemeSwitcherProps) => {
 
 	return (
 		<ThemeSwitcherWrapper>
-			<div className={isDark === true ? 'inactiveSwitch' : ''}
+			<div className={isDark ? 'inactiveSwitch' : ''}
 								 onClick={() => setIsDark(false)}>
 				<span>light</span>
 			</div>
 			<span style={{margin: '0px 4px 0px 4px'}}>/</span>
-			<div className={isDark === false ? 'inactiveSwitch' : ''}
+			<div className={!isDark ? 'inactiveSwitch' : ''}
 								 onClick={() => setIsDark(true)}>
 				<span>dark</span>
 			</div>

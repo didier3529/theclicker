@@ -20,7 +20,7 @@ const App: React.FC = () => {
 				<ClickerArea clickCount={clickCount} setClickCount={setClickCount}/>
 			</Wrapper>
 			<Wrapper>
-				<ControlArea isDark={isDark} setClickCount={setClickCount} clickCount={clickCount}/>
+				<ControlArea isDark={isDark} setClickCount={setClickCount}/>
 			</Wrapper>
 			<ThemeSwitcher isDark={isDark} setIsDark={setIsDark}/>
 		</>
