@@ -1,11 +1,12 @@
 import {CardButton} from '../CardButton/CardButton.tsx';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {animate, useMotionValue, useTransform} from 'framer-motion';
-import {CardWrapper, ClickerContainer, MotionGrid, RotationWrapper} from './ClickerArea.styles.ts';
+import {CardWrapper, CardWrapperMobile, ClickerContainer, MotionGrid, RotationWrapper} from './ClickerArea.styles.ts';
 import {ClickerAreaProps} from '../../types.ts';
 import {Wrapper} from '../../App.styles.ts'; // стили
 
-export const ClickerArea = ({ clickCount, setClickCount}: ClickerAreaProps) => {
+export const ClickerArea = ({clickCount, setClickCount}: ClickerAreaProps) => {
+	const [isMobile, setIsMobile] = useState(false);
 	// позиция курсора
 	const mouseX = useMotionValue(
 		typeof window !== 'undefined' ? window.innerWidth / 2 : 0
@@ -15,6 +16,13 @@ export const ClickerArea = ({ clickCount, setClickCount}: ClickerAreaProps) => {
 	);
 
 	useEffect(() => {
+		const checkScreenWidth = () => {
+			setIsMobile(window.innerWidth <= 430);
+		};
+
+		checkScreenWidth();
+
+		window.addEventListener('resize', checkScreenWidth);
 		const handleMouseMove = (e: MouseEvent) => {
 			// анимация по X и Y
 			animate(mouseX, e.clientX);
@@ -25,6 +33,7 @@ export const ClickerArea = ({ clickCount, setClickCount}: ClickerAreaProps) => {
 		// очистка
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove);
+			window.removeEventListener('resize', checkScreenWidth);
 		};
 	}, []);
 
@@ -51,15 +60,30 @@ export const ClickerArea = ({ clickCount, setClickCount}: ClickerAreaProps) => {
 	return (
 		<>
 			<ClickerContainer>
-				<RotationWrapper style={{rotateX, rotateY}}>
-					<MotionGrid/>
-					<CardWrapper ref={cardRef}>
+				{isMobile ? (
+					<CardWrapperMobile>
 						<CardButton setClickCount={setClickCount} clickCount={clickCount}/>
-					</CardWrapper>
-				</RotationWrapper>
+					</CardWrapperMobile>
+				) : (
+					<RotationWrapper style={{rotateX, rotateY}}>
+						<MotionGrid/>
+						<CardWrapper ref={cardRef}>
+							<CardButton setClickCount={setClickCount} clickCount={clickCount}/>
+						</CardWrapper>
+					</RotationWrapper>
+				)}
 				<Wrapper>
 					<p style={{marginBottom: '15px', fontSize: '2em', textAlign: 'center'}}>{clickCount}</p>
-					<hr className='hr' style={{padding: '0px', margin: '0px', width: '30vw', minWidth: '400px', border: 'none', color: '#5d5d5d', height: '3px', backgroundColor: '#5d5d5d'}}/>
+					<hr className="hr" style={{
+						padding: '0px',
+						margin: '0px',
+						width: '30vw',
+						minWidth: '400px',
+						border: 'none',
+						color: '#5d5d5d',
+						height: '3px',
+						backgroundColor: '#5d5d5d'
+					}}/>
 				</Wrapper>
 			</ClickerContainer>
 		</>

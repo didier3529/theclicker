@@ -14,3 +14,8 @@ export type ThemeSwitcherProps = {
 	isDark: boolean;
 	setIsDark: React.Dispatch<React.SetStateAction<boolean>>
 }
+
+export type CardButtonProps = {
+	setClickCount: React.Dispatch<SetStateAction<number>>,
+	clickCount: number,
+}

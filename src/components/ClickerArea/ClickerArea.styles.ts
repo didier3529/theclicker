@@ -3,6 +3,19 @@ import {motion} from 'framer-motion';
 
 const SIZE = 60;
 
+export const CardWrapperMobile = styled.div`
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&:active {
+		transition: all 0.03s linear;
+		transform: scale(1.05);
+	}
+`
+
 export const ClickerContainer = styled.div`
 	@media screen and (max-width: 450px) {
 		width: 80%;
@@ -19,7 +32,6 @@ export const ClickerContainer = styled.div`
 `
 
 export const RotationWrapper = styled(motion.div)`
-	
 	width: 100%;
 	height: 100%;
 	display: flex;
