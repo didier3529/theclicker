@@ -34,6 +34,7 @@ export const ClickerArea = ({clickCount, setClickCount}: ClickerAreaProps) => {
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove);
 			window.removeEventListener('resize', checkScreenWidth);
+			document.addEventListener("touchstart", function(){}, true);window.addEventListener('resize', checkScreenWidth);
 		};
 	}, []);
 

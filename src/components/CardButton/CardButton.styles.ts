@@ -8,9 +8,14 @@ export const ClickerButton = styled.button`
 	background-position: bottom;
 	background-repeat: no-repeat;
 	margin-top: 4em;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
 	//border-radius: 20px;
 	//display: flex;
 	//justify-content: center;
+	
+	&:focus {
+		outline: none;
+	}
 
 	&:hover {
 		transition: all 0.1s linear;
