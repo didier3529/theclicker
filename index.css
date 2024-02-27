@@ -3,11 +3,13 @@
 	@media screen and (max-width:450px) {
 		font-size: 0.8em;
 	}
-	font-family: 'BigBlueTerm437 Nerd Font', sans-serif;
+	font-family: 'Press Start 2P', system-ui;
 	height: 100%;
 	width: 100%;
 	box-sizing: border-box;
 }
+
+
 :root[data-theme = 'light'] {
 	.inactiveSwitch {
 		color: #797979;

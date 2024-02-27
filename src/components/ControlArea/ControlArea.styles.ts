@@ -12,8 +12,8 @@ export const Button = styled.button<ButtonProps>`
 	background-color: #5d5d5d;
 	border-radius: 5px;
 	margin: 1.5em 0em 0em 0em;
-	font-family: 'Hack', serif;
-	font-size: 1.4em;
+	font-family: 'hack', sans-serif;
+	font-size: 1.2em;
 	padding: 6px;
 
 	&:hover {
