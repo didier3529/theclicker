@@ -1,8 +1,8 @@
 import {useEffect} from 'react';
-import {ThemeSwitcherProps} from '../../types.ts';
+import {FooterProps} from '../../../types.ts';
 import {ThemeSwitcherWrapper} from './ThemeSwitcher.styles.ts';
 
-export const ThemeSwitcher = ({isDark, setIsDark}: ThemeSwitcherProps) => {
+export const ThemeSwitcher = ({isDark, setIsDark}: FooterProps) => {
 
 	useEffect(() => {
 		document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');

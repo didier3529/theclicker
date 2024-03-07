@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Wrapper} from './App.styles.ts'; // стили
 import {ClickerArea} from './components/ClickerArea/ClickerArea.tsx';
 import {ControlArea} from './components/ControlArea/ControlArea.tsx';
-import {ThemeSwitcher} from './components/ThemeSwitcher/ThemeSwitcher.tsx';
+import {Footer} from './components/Footer/Footer.tsx';
 
 const App: React.FC = () => {
 	const [clickCount, setClickCount] = useState<number>(() => {
@@ -20,9 +20,9 @@ const App: React.FC = () => {
 				<ClickerArea clickCount={clickCount} setClickCount={setClickCount}/>
 			</Wrapper>
 			<Wrapper>
-				<ControlArea isDark={isDark} setClickCount={setClickCount}/>
+				<ControlArea isDark={isDark} setClickCount={setClickCount} clickCount={clickCount}/>
 			</Wrapper>
-			<ThemeSwitcher isDark={isDark} setIsDark={setIsDark}/>
+			<Footer isDark={isDark} setIsDark={setIsDark}/>
 		</>
 	);
 };

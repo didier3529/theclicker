@@ -1,13 +1,7 @@
-import React from 'react';
 import {ModalContent} from './Modal.styles.ts';
 import {Transition} from 'react-transition-group';
 import {Wrapper} from '../../App.styles.ts';
-
-type ModalProps = {
-	modalIsOpen: boolean;
-	setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	children: React.ReactNode;
-}
+import {ModalProps} from '../../types.ts';
 
 export const Modal = ({modalIsOpen, setModalIsOpen, children}: ModalProps) => {
 	return (

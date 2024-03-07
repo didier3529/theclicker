@@ -1,10 +1,19 @@
 import styled from '@emotion/styled';
+import {ButtonProps} from '../../types.ts';
 
-type ButtonProps = {
-	children: string;
-	isDark: boolean;
-	onClick: () => void;
-};
+export const UpgradeList = styled.ul`
+	width: 100%;
+	padding: 0;
+`
+
+export const ControlAreaWrapper = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	transition: transform 0.3s;
+	max-width: 16em;
+	width: 50%;
+`
 
 export const Button = styled.button<ButtonProps>`
 	border: 1.5px solid #5d5d5d;
@@ -18,7 +27,7 @@ export const Button = styled.button<ButtonProps>`
 
 	&:hover {
 		background-color: #FEFEFE;
-		color: #5d5d5d;
+		color: #c0c0bf;
 		transition: all 0.1s ease-in-out;
 		transform: scale(1.1);
 	}
