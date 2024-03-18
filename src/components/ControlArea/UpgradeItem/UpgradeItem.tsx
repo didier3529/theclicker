@@ -1,27 +1,7 @@
 import {UpgradeButton, UpgradePrice} from './UpgradeItem.styles.ts';
 import {UpgradeProps} from '../../../types.ts';
-import {useEffect, useMemo} from 'react';
 
 export const UpgradeItem = ({isDark, text, price, clickCount, setClickCount, upgrades, setUpgrades, intervalId, setIntervalId}: UpgradeProps) => {
-
-	const interval = useMemo(() => {
-		console.log('set interval');
-		if (upgrades.passiveClick > 0) {
-			return setInterval(() => {
-				setClickCount(prev => prev + 1);
-			}, 3000 / upgrades.passiveClick);
-		}
-		return null;
-	}, [upgrades.passiveClick, setClickCount]);
-
-	useEffect(() => {
-		console.log('useEffect');
-		return () => {
-			if (interval) {
-				clearInterval(interval);
-			}
-		}
-	}, [interval]);
 
 	const handlePurchase = (upgradeName: string) => {
 		if (clickCount >= price) {

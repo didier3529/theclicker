@@ -1,17 +1,44 @@
 import {Button, ControlAreaWrapper, UpgradeList} from './ControlArea.styles.ts';
 import {ControlAreaProps} from '../../types.ts';
 import {Modal} from '../Modal/Modal.tsx';
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {UpgradeItem} from './UpgradeItem/UpgradeItem.tsx';
 
 export const ControlArea = ({setClickCount, isDark, clickCount}: ControlAreaProps) => {
 	const [modalType, setModalType] = useState<string | null>(null)
 	const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-	const [upgrades, setUpgrades] = useState({
+	const initialUpgrades = localStorage.getItem('upgrades');
+	const [upgrades, setUpgrades] = useState(initialUpgrades ? JSON.parse(initialUpgrades) : {
 		passiveClick: 0,
 		x2PerClick: false,
 		x3PerClick: false,
 	});
+
+	const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+	useEffect(() => {
+		console.log('useEffect');
+		if (upgrades.passiveClick > 0) {
+			if (intervalRef.current) {
+				clearInterval(intervalRef.current);
+			}
+
+			intervalRef.current = setInterval(() => {
+				setClickCount(prev => prev + 1);
+				console.log('click');
+			}, 3000 / upgrades.passiveClick);
+		}
+
+		return () => {
+			if (intervalRef.current) {
+				clearInterval(intervalRef.current);
+			}
+		}
+	}, [upgrades.passiveClick, setClickCount]);
+
+	useEffect(() => {
+		localStorage.setItem('upgrades', JSON.stringify(upgrades));
+	}, [upgrades]);
 
 	const handleNewGame = () => {
 		setModalType(null);
