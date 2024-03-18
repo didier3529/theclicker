@@ -5,7 +5,7 @@ export const UpgradePrice = styled.span`
 	float: right;
 `
 
-export const UpgradeButton = styled.div<UpgradeProps>`
+export const UpgradeButton = styled.button<UpgradeProps>`
 	@media screen and (max-width: 430px) {
 		font-size: 93%;
 		text-align: start;

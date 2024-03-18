@@ -7,15 +7,22 @@ export type ButtonProps = {
 };
 
 export type UpgradeProps = {
-	children?: React.ReactNode;
-	text?: string;
-	price?: number;
+	text: string;
+	price: number;
 	isDark: boolean;
+	clickCount: number;
+	setClickCount: React.Dispatch<SetStateAction<number>>,
+	setUpgrades: React.Dispatch<SetStateAction<{ passiveClick: number, x2PerClick: boolean, x3PerClick: boolean }>>
+	onClick?: ({clickCount, price, setClickCount}: UpgradeProps) => void;
+	upgrades: { passiveClick: number, x2PerClick: boolean, x3PerClick: boolean };
+	intervalId: NodeJS.Timeout | null;
+	setIntervalId: React.Dispatch<React.SetStateAction<NodeJS.Timeout | null>>;
 }
 
 export type ControlAreaProps = {
 	setClickCount: React.Dispatch<SetStateAction<number>>,
 	isDark: boolean,
+	clickCount: number,
 }
 
 export type ClickerAreaProps = {

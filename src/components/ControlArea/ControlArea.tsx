@@ -4,8 +4,14 @@ import {Modal} from '../Modal/Modal.tsx';
 import {useState} from 'react';
 import {UpgradeItem} from './UpgradeItem/UpgradeItem.tsx';
 
-export const ControlArea = ({setClickCount, isDark}: ControlAreaProps) => {
-	const [modalType, setModalType] = useState<string | null>(null);
+export const ControlArea = ({setClickCount, isDark, clickCount}: ControlAreaProps) => {
+	const [modalType, setModalType] = useState<string | null>(null)
+	const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+	const [upgrades, setUpgrades] = useState({
+		passiveClick: 0,
+		x2PerClick: false,
+		x3PerClick: false,
+	});
 
 	const handleNewGame = () => {
 		setModalType(null);
@@ -31,12 +37,12 @@ export const ControlArea = ({setClickCount, isDark}: ControlAreaProps) => {
 				<>
 					<h2>Upgrades:</h2>
 					<UpgradeList>
-						<UpgradeItem text={'Passive click lvl.1'} price={1000} isDark={isDark}/>
-						<UpgradeItem text={'Passive click lvl.2'} price={10000} isDark={isDark}/>
-						<UpgradeItem text={'Passive click lvl.3'} price={100000} isDark={isDark}/>
+						<UpgradeItem key={0} text={'Passive click lvl.1'} price={1000} isDark={isDark} clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}/>
+						<UpgradeItem key={1} text={'Passive click lvl.2'} price={10000} isDark={isDark} clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}/>
+						<UpgradeItem key={2} text={'Passive click lvl.3'} price={100000} isDark={isDark} clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}/>
 
-						<UpgradeItem text={'X2 click'} price={100000} isDark={isDark}/>
-						<UpgradeItem text={'X3 click'} price={1000000} isDark={isDark}/>
+						<UpgradeItem key={3} text={'X2 per click'} price={100000} isDark={isDark} clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}/>
+						<UpgradeItem key={4} text={'X3 per click'} price={1000000} isDark={isDark} clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}/>
 					</UpgradeList>
 				</>
 			)}
