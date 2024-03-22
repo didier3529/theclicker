@@ -17,6 +17,7 @@ export type UpgradeProps = {
 	upgrades: { passiveClick: number, x2PerClick: boolean, x3PerClick: boolean };
 	intervalId: NodeJS.Timeout | null;
 	setIntervalId: React.Dispatch<React.SetStateAction<NodeJS.Timeout | null>>;
+	isUpgradePurchased?: any;
 }
 
 export type ControlAreaProps = {

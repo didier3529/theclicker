@@ -17,13 +17,22 @@ export const UpgradeButton = styled.button<UpgradeProps>`
 	width: 100%;
 	color: #FEFEFE;
 	font-family: 'Press Start 2P', system-ui;
+
 	&:hover {
 		color: #5d5d5d;
 	}
+
 	${props => props.isDark === false && `
 		color: #5d5d5d;
 		&:hover {
 			color: #797979;
 		}
+  `}
+	${props => props.isUpgradePurchased === true && `
+		color: #5d5d5d;
+		
+		${props.isDark === false && `
+			color: #b0b0b0;
+  		`}
   `}
 `
