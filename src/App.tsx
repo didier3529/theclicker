@@ -13,14 +13,20 @@ const App: React.FC = () => {
 		const savedIsDark = localStorage.getItem('isDark');
 		return savedIsDark ? savedIsDark === 'true' : false;
 	});
+	const initialUpgrades = localStorage.getItem('upgrades');
+	const [upgrades, setUpgrades] = useState(initialUpgrades ? JSON.parse(initialUpgrades) : {
+		passiveClick: 0,
+		x2PerClick: false,
+		x3PerClick: false,
+	});
 
 	return (
 		<>
 			<Wrapper>
-				<ClickerArea clickCount={clickCount} setClickCount={setClickCount}/>
+				<ClickerArea clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades}/>
 			</Wrapper>
 			<Wrapper>
-				<ControlArea isDark={isDark} setClickCount={setClickCount} clickCount={clickCount}/>
+				<ControlArea isDark={isDark} setClickCount={setClickCount} clickCount={clickCount} upgrades={upgrades} setUpgrades={setUpgrades}/>
 			</Wrapper>
 			<Footer isDark={isDark} setIsDark={setIsDark}/>
 		</>

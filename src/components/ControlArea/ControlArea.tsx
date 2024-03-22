@@ -4,15 +4,9 @@ import {Modal} from '../Modal/Modal.tsx';
 import {useEffect, useRef, useState} from 'react';
 import {UpgradeItem} from './UpgradeItem/UpgradeItem.tsx';
 
-export const ControlArea = ({setClickCount, isDark, clickCount}: ControlAreaProps) => {
+export const ControlArea = ({setClickCount, isDark, clickCount, upgrades, setUpgrades}: ControlAreaProps) => {
 	const [modalType, setModalType] = useState<string | null>(null)
 	const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-	const initialUpgrades = localStorage.getItem('upgrades');
-	const [upgrades, setUpgrades] = useState(initialUpgrades ? JSON.parse(initialUpgrades) : {
-		passiveClick: 0,
-		x2PerClick: false,
-		x3PerClick: false,
-	});
 
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 

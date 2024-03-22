@@ -23,11 +23,14 @@ export type ControlAreaProps = {
 	setClickCount: React.Dispatch<SetStateAction<number>>,
 	isDark: boolean,
 	clickCount: number,
+	upgrades: { passiveClick: number, x2PerClick: boolean, x3PerClick: boolean };
+	setUpgrades: React.Dispatch<SetStateAction<{ passiveClick: number, x2PerClick: boolean, x3PerClick: boolean }>>
 }
 
 export type ClickerAreaProps = {
 	setClickCount: React.Dispatch<SetStateAction<number>>,
 	clickCount: number,
+	upgrades: { passiveClick: number, x2PerClick: boolean, x3PerClick: boolean };
 }
 
 export type FooterProps = {
@@ -36,8 +39,7 @@ export type FooterProps = {
 }
 
 export type CardButtonProps = {
-	setClickCount: React.Dispatch<SetStateAction<number>>,
-	clickCount: number,
+	handleButtonClick: () => void;
 }
 
 export type ModalProps = {

@@ -22,9 +22,11 @@ export const UpgradeItem = ({isDark, text, price, clickCount, setClickCount, upg
 				}
 			} else if (upgradeName === 'X2 per click') {
 				console.log('Уровень улучшения обновлён');
+				setUpgrades(prev => ({...prev, x3PerClick: false}));
 				setUpgrades(prev => ({...prev, x2PerClick: true}));
 			} else if (upgradeName === 'X3 per click') {
 				console.log('Уровень улучшения обновлён');
+				setUpgrades(prev => ({...prev, x2PerClick: false}));
 				setUpgrades(prev => ({...prev, x3PerClick: true}));
 			}
 		} else {

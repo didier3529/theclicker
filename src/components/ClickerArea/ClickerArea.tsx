@@ -5,7 +5,7 @@ import {CardWrapper, CardWrapperMobile, ClickerContainer, MotionGrid, RotationWr
 import {ClickerAreaProps} from '../../types.ts';
 import {Wrapper} from '../../App.styles.ts'; // стили
 
-export const ClickerArea = ({clickCount, setClickCount}: ClickerAreaProps) => {
+export const ClickerArea = ({clickCount, setClickCount, upgrades}: ClickerAreaProps) => {
 	const [isMobile, setIsMobile] = useState(false);
 	// позиция курсора
 	const mouseX = useMotionValue(
@@ -14,6 +14,16 @@ export const ClickerArea = ({clickCount, setClickCount}: ClickerAreaProps) => {
 	const mouseY = useMotionValue(
 		typeof window !== 'undefined' ? window.innerHeight / 2 : 0
 	);
+
+	const handleButtonClick = () => {
+		if (upgrades.x2PerClick) {
+			setClickCount(clickCount + 2);
+		} else if (upgrades.x3PerClick) {
+			setClickCount(clickCount + 3);
+		} else {
+			setClickCount(clickCount + 1);
+		}
+	};
 
 	useEffect(() => {
 		const checkScreenWidth = () => {
@@ -63,13 +73,13 @@ export const ClickerArea = ({clickCount, setClickCount}: ClickerAreaProps) => {
 			<ClickerContainer>
 				{isMobile ? (
 					<CardWrapperMobile>
-						<CardButton setClickCount={setClickCount} clickCount={clickCount}/>
+						<CardButton handleButtonClick={handleButtonClick}/>
 					</CardWrapperMobile>
 				) : (
 					<RotationWrapper style={{rotateX, rotateY}}>
 						<MotionGrid/>
 						<CardWrapper ref={cardRef}>
-							<CardButton setClickCount={setClickCount} clickCount={clickCount}/>
+							<CardButton handleButtonClick={handleButtonClick}/>
 						</CardWrapper>
 					</RotationWrapper>
 				)}
