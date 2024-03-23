@@ -6,6 +6,12 @@ export type ButtonProps = {
 	onClick: () => void;
 };
 
+export type AvailableUpgradesProps = {
+	passiveClick: number;
+	x2PerClick: boolean;
+	x3PerClick: boolean;
+}
+
 export type UpgradeProps = {
 	text: string;
 	price: number;
@@ -17,7 +23,8 @@ export type UpgradeProps = {
 	upgrades: { passiveClick: number, x2PerClick: boolean, x3PerClick: boolean };
 	intervalId: NodeJS.Timeout | null;
 	setIntervalId: React.Dispatch<React.SetStateAction<NodeJS.Timeout | null>>;
-	isUpgradePurchased?: any;
+	isUpgradePurchased?: (upgradeName: string) => boolean;
+	updateAvailableUpgrades: (upgrades: string) => void;
 }
 
 export type ControlAreaProps = {
