@@ -27,7 +27,6 @@ export const Input = styled.input`
 	border-radius: 5px;
 	border: 1.5px solid #5d5d5d;
 	font-family: 'Press Start 2P', system-ui;
-	font-size: 0.7em;
 	width: 22em;
 	touch-action: manipulation;
 	

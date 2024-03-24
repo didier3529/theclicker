@@ -50,7 +50,7 @@ const App: React.FC = () => {
 			<Modal modalIsOpen={showModal} setModalIsOpen={() => setShowModal(false)}
 				   onClose={() => setShowModal(false)}>
 				<Form onSubmit={handleNameSubmit}>
-					<img alt="boykisser-tapping" src={"public/images/boykisser-tapping.png"} onClick={(event) => event.stopPropagation()}/>
+					<img alt="boykisser-tapping" src={"/images/boykisser-tapping.png"} onClick={(event) => event.stopPropagation()}/>
 					<Input type="text" name="input" className={'input'} placeholder="Enter ur nickname here"
 						   onClick={(event) => event.stopPropagation()}/>
 					<Button isDark={isDark} type="submit" onClick={(event) => event && event.stopPropagation()}>Save</Button>

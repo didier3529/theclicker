@@ -40,6 +40,10 @@ body {
 	margin: 0 auto;
 }
 
+input[type="text"] {
+	font-size: 0.9em;
+}
+
 button {
 	background: none;
 	border: none;
