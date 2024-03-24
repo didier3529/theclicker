@@ -6,7 +6,7 @@ import {UpgradeItem} from './UpgradeItem/UpgradeItem.tsx';
 import {useAvailableUpgrades} from '../../hooks/useAvailableUpgrades.ts';
 
 export const ControlArea = ({setClickCount, isDark, clickCount, upgrades, setUpgrades}: ControlAreaProps) => {
-	const [modalType, setModalType] = useState<string | null>(null)
+	const [modalType, setModalType] = useState<string | null>(null);
 	const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 	const {updateAvailableUpgrades} = useAvailableUpgrades();
 
@@ -29,7 +29,7 @@ export const ControlArea = ({setClickCount, isDark, clickCount, upgrades, setUpg
 			if (intervalRef.current) {
 				clearInterval(intervalRef.current);
 			}
-		}
+		};
 	}, [upgrades.passiveClick, setClickCount]);
 
 	useEffect(() => {
@@ -60,13 +60,32 @@ export const ControlArea = ({setClickCount, isDark, clickCount, upgrades, setUpg
 				<>
 					<h2>Upgrades:</h2>
 					<UpgradeList>
-						<UpgradeItem key={0} text={'Passive click lvl.1'} price={1000} isDark={isDark} clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId} updateAvailableUpgrades={updateAvailableUpgrades} />
-						<UpgradeItem key={1} text={'Passive click lvl.2'} price={10000} isDark={isDark} clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId} updateAvailableUpgrades={updateAvailableUpgrades} />
-						<UpgradeItem key={2} text={'Passive click lvl.3'} price={100000} isDark={isDark} clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId} updateAvailableUpgrades={updateAvailableUpgrades} />
+						<UpgradeItem key={0} text={'Passive click lvl.1'} price={1000} isDark={isDark}
+									 clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades}
+									 setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}
+									 updateAvailableUpgrades={updateAvailableUpgrades}/>
+						<UpgradeItem key={1} text={'Passive click lvl.2'} price={10000} isDark={isDark}
+									 clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades}
+									 setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}
+									 updateAvailableUpgrades={updateAvailableUpgrades}/>
+						<UpgradeItem key={2} text={'Passive click lvl.3'} price={100000} isDark={isDark}
+									 clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades}
+									 setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}
+									 updateAvailableUpgrades={updateAvailableUpgrades}/>
 
-						<UpgradeItem key={3} text={'X2 per click'} price={100000} isDark={isDark} clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId} updateAvailableUpgrades={updateAvailableUpgrades} />
-						<UpgradeItem key={4} text={'X3 per click'} price={1000000} isDark={isDark} clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId} updateAvailableUpgrades={updateAvailableUpgrades} />
+						<UpgradeItem key={3} text={'X2 per click'} price={100000} isDark={isDark}
+									 clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades}
+									 setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}
+									 updateAvailableUpgrades={updateAvailableUpgrades}/>
+						<UpgradeItem key={4} text={'X3 per click'} price={1000000} isDark={isDark}
+									 clickCount={clickCount} setClickCount={setClickCount} upgrades={upgrades}
+									 setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}
+									 updateAvailableUpgrades={updateAvailableUpgrades}/>
 					</UpgradeList>
+					<Button style={{padding: '0.2em', width: '4.5em', fontSize: '1.2em', margin: 'auto'}} isDark={isDark}
+							onClick={() => setModalType(null)}>
+						{`<-Back`}
+					</Button>
 				</>
 			)}
 		</Modal>

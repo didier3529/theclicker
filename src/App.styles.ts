@@ -21,6 +21,32 @@ export const Wrapper = styled.div`
 	}
 `;
 
+export const Input = styled.input`
+	-webkit-text-size-adjust: 100%;
+	padding: 10px;
+	border-radius: 5px;
+	border: 1.5px solid #5d5d5d;
+	font-family: 'Press Start 2P', system-ui;
+	font-size: 0.7em;
+	width: 22em;
+	touch-action: manipulation;
+	
+
+	&:focus {
+		outline: #5d5d5d double 0.2em;
+		box-shadow: 0 0 10px #f8f4ef;
+	}
+`
+
+export const Form = styled.form`
+	padding-top: 30%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+`
+
 
 
 

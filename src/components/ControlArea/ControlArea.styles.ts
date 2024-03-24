@@ -36,7 +36,7 @@ export const Button = styled.button<ButtonProps>`
 		transform: scale(1.2);
 	}
 
-	${props => props.isDark === true && `
+	${props => props.isDark === false && `
 		background-color: #FEFEFE;
 		color: #5d5d5d;
 		border-color: #FEFEFE;

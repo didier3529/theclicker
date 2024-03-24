@@ -4,6 +4,7 @@ export const ModalContent = styled.div`
 	@media screen and (max-width: 430px) {
 		width: 90%;
 	}
+	pointer-events: auto;
 	position: relative;
 	display: flex;
 	flex-flow: row wrap;

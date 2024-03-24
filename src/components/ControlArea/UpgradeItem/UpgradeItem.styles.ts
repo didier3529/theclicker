@@ -22,7 +22,7 @@ export const UpgradeButton = styled.button<UpgradeProps>`
 		color: #5d5d5d;
 	}
 
-	${props => props.isDark === false && `
+	${props => props.isDark === true && `
 		color: #5d5d5d;
 		&:hover {
 			color: #797979;
@@ -31,7 +31,7 @@ export const UpgradeButton = styled.button<UpgradeProps>`
 	${props => props.isUpgradePurchased && `
 		color: #5d5d5d;
 		
-		${props.isDark === false && `
+		${props.isDark === true && `
 			color: #b0b0b0;
   		`}
   `}

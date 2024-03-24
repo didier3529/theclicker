@@ -3,7 +3,7 @@ import React, {SetStateAction} from 'react';
 export type ButtonProps = {
 	children: string;
 	isDark: boolean;
-	onClick: () => void;
+	onClick: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 };
 
 export type AvailableUpgradesProps = {
@@ -51,7 +51,8 @@ export type CardButtonProps = {
 }
 
 export type ModalProps = {
-	modalIsOpen: boolean;
+	modalIsOpen?: boolean;
 	setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	children: React.ReactNode;
+	onClose?: () => void;
 }

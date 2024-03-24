@@ -5,24 +5,23 @@ import {ThemeSwitcherWrapper} from './ThemeSwitcher.styles.ts';
 export const ThemeSwitcher = ({isDark, setIsDark}: FooterProps) => {
 
 	useEffect(() => {
-		document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+		document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
 	}, [isDark]);
 
 	useEffect(() => {
 		localStorage.setItem('isDark', isDark.toString());
-		setIsDark(isDark);
 	}, [isDark, setIsDark]);
 
 	return (
 		<ThemeSwitcherWrapper>
 			<div className={isDark ? 'inactiveSwitch' : ''}
 								 onClick={() => setIsDark(false)}>
-				<span>light</span>
+				<span>dark</span>
 			</div>
 			<span style={{margin: '0px 4px 0px 4px'}}>/</span>
 			<div className={!isDark ? 'inactiveSwitch' : ''}
 								 onClick={() => setIsDark(true)}>
-				<span>dark</span>
+				<span>light</span>
 			</div>
 		</ThemeSwitcherWrapper>
 	);

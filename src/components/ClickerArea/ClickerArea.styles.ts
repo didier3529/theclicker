@@ -41,7 +41,6 @@ export const RotationWrapper = styled(motion.div)`
 `;
 
 export const CardWrapper = styled(motion.div)`
-	//border-radius: 20px;
 	backdrop-filter: blur(3px) brightness(120%);
 	
 	&:active {
