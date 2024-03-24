@@ -28,7 +28,7 @@ export const UpgradeButton = styled.button<UpgradeProps>`
 			color: #797979;
 		}
   `}
-	${props => !props.isUpgradePurchased && `
+	${props => props.isUpgradePurchased && `
 		color: #5d5d5d;
 		
 		${props.isDark === false && `

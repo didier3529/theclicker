@@ -52,7 +52,7 @@ export const UpgradeItem = ({isDark, text, price, clickCount, setClickCount, upg
 
 	return (
 		<li>
-			<UpgradeButton disabled={isThisUpgradePurchased} onClick={() => handlePurchase(text)} text={text} price={price} clickCount={clickCount} isDark={isDark} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId} isUpgradePurchased={isUpgradePurchased} updateAvailableUpgrades={updateAvailableUpgrades}>
+			<UpgradeButton disabled={isThisUpgradePurchased} onClick={() => handlePurchase(text)} text={text} price={price} clickCount={clickCount} isDark={isDark} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId} isUpgradePurchased={isThisUpgradePurchased} updateAvailableUpgrades={updateAvailableUpgrades}>
 				<div>{text}</div>
 				<UpgradePrice>{price}</UpgradePrice>
 			</UpgradeButton>
