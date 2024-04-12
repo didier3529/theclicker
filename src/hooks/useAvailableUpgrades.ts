@@ -24,6 +24,8 @@ export const useAvailableUpgrades = () => {
 					setAvailableUpgrades(prev => ({...prev, passiveClick: 3}));
 				}
 			}
+		} else if (upgradeName === 'X2 per click') {
+			setAvailableUpgrades(prev => ({...prev, x3PerClick: true}));
 		}
 	};
 	return { availableUpgrades, updateAvailableUpgrades };

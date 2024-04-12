@@ -3,9 +3,10 @@ import {useEffect, useRef, useState} from 'react';
 import {animate, useMotionValue, useTransform} from 'framer-motion';
 import {CardWrapper, CardWrapperMobile, ClickerContainer, MotionGrid, RotationWrapper} from './ClickerArea.styles.ts';
 import {ClickerAreaProps} from '../../types.ts';
-import {Wrapper} from '../../App.styles.ts'; // стили
+import {Wrapper} from '../../App.styles.ts';
+import {auth, db} from '../../firebase.ts'; // стили
 
-export const ClickerArea = ({clickCount, setClickCount, upgrades}: ClickerAreaProps) => {
+export const ClickerArea = ({clickCount, setClickCount, upgrades, isAuthenticated}: ClickerAreaProps) => {
 	const [isMobile, setIsMobile] = useState(false);
 	// позиция курсора
 	const mouseX = useMotionValue(
@@ -49,7 +50,18 @@ export const ClickerArea = ({clickCount, setClickCount, upgrades}: ClickerAreaPr
 	}, []);
 
 	useEffect(() => {
-		localStorage.setItem('clickCount', clickCount.toString());
+		if (isAuthenticated) {
+			const user = auth.currentUser; // Получаем текущего пользователя
+			if (user) {
+				// Сохраняем clickCount в Firebase Realtime Database
+				db.ref('users/' + user.uid).update({
+					clickCount: clickCount
+				});
+				console.log('db click');
+			}
+		} else {
+			localStorage.setItem('clickCount', clickCount.toString());
+		}
 	}, [clickCount]);
 
 	const cardRef = useRef<HTMLDivElement>(null);

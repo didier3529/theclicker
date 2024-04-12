@@ -1,5 +1,6 @@
 // @ts-ignore
 import styled from '@emotion/styled';
+import {ButtonProps} from './types.ts';
 
 export const Wrapper = styled.div`
 	display: flex;
@@ -24,7 +25,9 @@ export const Wrapper = styled.div`
 export const Input = styled.input`
 	-webkit-text-size-adjust: 100%;
 	padding: 10px;
+	margin-top: 0.2em;
 	border-radius: 5px;
+	font-size: 0.9em;
 	border: 1.5px solid #5d5d5d;
 	font-family: 'Press Start 2P', system-ui;
 	width: 22em;
@@ -37,8 +40,34 @@ export const Input = styled.input`
 	}
 `
 
+export const SwitchButton = styled.button<ButtonProps>`
+	@media screen and (max-width: 430px) {
+		font-size: 93%;
+		text-align: start;
+	}
+	margin: 1.5em;
+	cursor: pointer;
+	color: #FEFEFE;
+	font-family: 'Press Start 2P', system-ui;
+
+	&:hover {
+		color: #5d5d5d;
+	}
+
+	${props => props.isDark === true && `
+		color: #5d5d5d;
+		&:hover {
+			color: #797979;
+		}
+  `}
+}
+`
+
 export const Form = styled.form`
-	padding-top: 30%;
+	@media screen and (max-width: 450px) {
+		padding-top: 18%
+	}
+	padding-top: 25%;
 	display: flex;
 	align-items: center;
 	flex-direction: column;

@@ -1,9 +1,9 @@
 import React, {SetStateAction} from 'react';
 
 export type ButtonProps = {
-	children: string;
+	children: string | string[];
 	isDark: boolean;
-	onClick: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+	onClick?: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent> | void) => void;
 };
 
 export type AvailableUpgradesProps = {
@@ -39,11 +39,16 @@ export type ClickerAreaProps = {
 	setClickCount: React.Dispatch<SetStateAction<number>>,
 	clickCount: number,
 	upgrades: { passiveClick: number, x2PerClick: boolean, x3PerClick: boolean };
+	isAuthenticated: boolean;
 }
 
 export type FooterProps = {
+	showModal: boolean;
 	isDark: boolean;
-	setIsDark: React.Dispatch<React.SetStateAction<boolean>>
+	setIsDark: React.Dispatch<React.SetStateAction<boolean>>,
+	setShowModal:  React.Dispatch<React.SetStateAction<boolean>>
+	displayName?: string;
+	isAnonymous?: boolean;
 }
 
 export type CardButtonProps = {

@@ -1,14 +1,18 @@
 import {ThemeSwitcher} from './ThemeSwitcher/ThemeSwitcher.tsx';
 import {FooterProps} from '../../types.ts';
 import {FooterWrapper} from './Footer.styles.ts';
+import {SwitchButton} from '../../App.styles.ts';
 
-export const Footer = ({isDark, setIsDark}: FooterProps) => {
+export const Footer = ({isDark, setIsDark, setShowModal, showModal, displayName, isAnonymous}: FooterProps) => {
 	return (
 		<FooterWrapper>
-			{localStorage.userName && (
-				<span className="inactiveSwitch" style={{fontSize: '0.7em'}}>user: {localStorage.userName}</span>
+			{!showModal && isAnonymous && (
+				<SwitchButton style={{margin: "1em"}} type="button" isDark={isDark} onClick={() => setShowModal(!showModal)}>Sign up | Sign in</SwitchButton>
 			)}
-			<ThemeSwitcher isDark={isDark} setIsDark={setIsDark}/>
+			{displayName && (
+				<span className="inactiveSwitch" style={{fontSize: '0.7em'}}>user: {displayName}</span>
+			)}
+			<ThemeSwitcher isDark={isDark} setIsDark={setIsDark} setShowModal={setShowModal} showModal={showModal}/>
 			<a href={'https://github.com/mi1sh/boykisser-clicker'} target='_blank' className='inactiveSwitch'>github</a>
 		</FooterWrapper>
 	);
