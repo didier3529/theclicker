@@ -4,9 +4,8 @@ import {animate, useMotionValue, useTransform} from 'framer-motion';
 import {CardWrapper, CardWrapperMobile, ClickerContainer, MotionGrid, RotationWrapper} from './ClickerArea.styles.ts';
 import {ClickerAreaProps} from '../../types.ts';
 import {Wrapper} from '../../App.styles.ts';
-import {auth, db} from '../../firebase.ts'; // стили
 
-export const ClickerArea = ({clickCount, setClickCount, upgrades, isAuthenticated}: ClickerAreaProps) => {
+export const ClickerArea = ({clickCount, upgrades, authClickCount, isAuthenticated, updateClickCount}: ClickerAreaProps) => {
 	const [isMobile, setIsMobile] = useState(false);
 	// позиция курсора
 	const mouseX = useMotionValue(
@@ -18,11 +17,11 @@ export const ClickerArea = ({clickCount, setClickCount, upgrades, isAuthenticate
 
 	const handleButtonClick = () => {
 		if (upgrades.x2PerClick) {
-			setClickCount(clickCount + 2);
+			isAuthenticated ? updateClickCount(authClickCount + 2) : updateClickCount(clickCount + 2);
 		} else if (upgrades.x3PerClick) {
-			setClickCount(clickCount + 3);
+			isAuthenticated ? updateClickCount(authClickCount + 3) : updateClickCount(clickCount + 3);
 		} else {
-			setClickCount(clickCount + 1);
+			isAuthenticated ? updateClickCount(authClickCount + 1) : updateClickCount(clickCount + 1);
 		}
 	};
 
@@ -48,21 +47,6 @@ export const ClickerArea = ({clickCount, setClickCount, upgrades, isAuthenticate
 			document.addEventListener("touchstart", function(){}, true);window.addEventListener('resize', checkScreenWidth);
 		};
 	}, []);
-
-	useEffect(() => {
-		if (isAuthenticated) {
-			const user = auth.currentUser; // Получаем текущего пользователя
-			if (user) {
-				// Сохраняем clickCount в Firebase Realtime Database
-				db.ref('users/' + user.uid).update({
-					clickCount: clickCount
-				});
-				console.log('db click');
-			}
-		} else {
-			localStorage.setItem('clickCount', clickCount.toString());
-		}
-	}, [clickCount]);
 
 	const cardRef = useRef<HTMLDivElement>(null);
 
@@ -96,7 +80,7 @@ export const ClickerArea = ({clickCount, setClickCount, upgrades, isAuthenticate
 					</RotationWrapper>
 				)}
 				<Wrapper>
-					<p style={{marginBottom: '15px', fontSize: '2em', textAlign: 'center'}}>{clickCount}</p>
+					<p style={{marginBottom: '15px', fontSize: '2em', textAlign: 'center'}}>{isAuthenticated ? authClickCount : clickCount}</p>
 					<hr className="hr" style={{
 						padding: '0px',
 						margin: '0px',

@@ -3,11 +3,11 @@ import {FooterProps} from '../../types.ts';
 import {FooterWrapper} from './Footer.styles.ts';
 import {SwitchButton} from '../../App.styles.ts';
 
-export const Footer = ({isDark, setIsDark, setShowModal, showModal, displayName, isAnonymous}: FooterProps) => {
+export const Footer = ({isDark, setIsDark, setShowModal, showModal, displayName, isAnonymous, handlePlayAnonymously}: FooterProps) => {
 	return (
 		<FooterWrapper>
 			{!showModal && isAnonymous && (
-				<SwitchButton style={{margin: "1em"}} type="button" isDark={isDark} onClick={() => setShowModal(!showModal)}>Sign up | Sign in</SwitchButton>
+				<SwitchButton style={{margin: "1em"}} type="button" isDark={isDark} onClick={handlePlayAnonymously}>Sign up | Sign in</SwitchButton>
 			)}
 			{displayName && (
 				<span className="inactiveSwitch" style={{fontSize: '0.7em'}}>user: {displayName}</span>

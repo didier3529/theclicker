@@ -36,10 +36,11 @@ export type ControlAreaProps = {
 }
 
 export type ClickerAreaProps = {
-	setClickCount: React.Dispatch<SetStateAction<number>>,
 	clickCount: number,
 	upgrades: { passiveClick: number, x2PerClick: boolean, x3PerClick: boolean };
 	isAuthenticated: boolean;
+	authClickCount: number;
+	updateClickCount: (arg0: number) => void;
 }
 
 export type FooterProps = {
@@ -49,6 +50,7 @@ export type FooterProps = {
 	setShowModal:  React.Dispatch<React.SetStateAction<boolean>>
 	displayName?: string;
 	isAnonymous?: boolean;
+	handlePlayAnonymously?: () => void;
 }
 
 export type CardButtonProps = {

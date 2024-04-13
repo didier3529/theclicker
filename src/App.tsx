@@ -17,6 +17,7 @@ const App: React.FC = () => {
 	const [displayName, setDisplayName] = useState('');
 	const [isRegistering, setIsRegistering] = useState(true);
 	const [showModal, setShowModal] = useState(isAuthenticated ? false : true);
+	const [authClickCount, setAuthClickCount] = useState<number>(0);
 	const [clickCount, setClickCount] = useState<number>(() => {
 		const savedClickCount = localStorage.getItem('clickCount');
 		return savedClickCount ? parseInt(savedClickCount, 10) : 0;
@@ -40,8 +41,8 @@ const App: React.FC = () => {
 				} else {
 					console.log('Error with displayName');
 				}
-				setIsAuthenticated(true);
 				setShowModal(false);
+				setIsAuthenticated(true);
 			} else {
 				setDisplayName('');
 				setIsAuthenticated(false);
@@ -50,6 +51,19 @@ const App: React.FC = () => {
 
 		return () => unsubscribe();
 	}, []);
+
+	useEffect(() => {
+		const currentUser = auth.currentUser;
+		if (currentUser) {
+			const userRef = db.ref('users/' + currentUser?.uid);
+			userRef.once('value', snapshot => {
+				const userData = snapshot.val();
+				if (userData && userData.clickCount) {
+					setAuthClickCount(userData.clickCount);
+				}
+			})
+		}
+	}, [isAuthenticated, authClickCount]);
 
 	const updateDisplayName = (newDisplayName: string) => {
 		setDisplayName(newDisplayName);
@@ -68,15 +82,18 @@ const App: React.FC = () => {
 					await user.reload(); // Перезагрузка пользователя
 					saveUsername(displayName, user.uid);
 					toast.success(`Signed up successfully: ${user.displayName}`);
+					// Инициализация authClickCount в 0 для нового пользователя
+					updateClickCount(0);
 					console.log(`User profile updated: ${user.displayName}`);
 				} else {
 					toast.error('Error: displayName is empty');
 					return;
 				}
-				// Записываем данные пользователя в базу данных Firebase
+				// Записываем данные пользователя в базу данных Firebase, включая authClickCount
 				await db.ref('users/' + user.uid).set({
 					displayName: displayName,
-					email: email
+					email: email,
+					clickCount: 0 // Инициализация authClickCount в 0
 				}).then(() => {
 					console.log('User profile updated with displayName:', displayName);
 					setShowModal(false);
@@ -102,10 +119,20 @@ const App: React.FC = () => {
 
 			if (user) {
 				console.log(user);
+				// Загрузка authClickCount из базы данных Firebase
+				const userRef = db.ref('users/' + user.uid);
+				userRef.once('value', snapshot => {
+					const userData = snapshot.val();
+					if (userData && userData.clickCount) {
+						// Обновление authClickCount в состоянии приложения
+						setAuthClickCount(userData.clickCount);
+					}
+				});
 				toast.success(`Signed in successfully: ${user.displayName}`);
 			} else {
 				toast.error('Error signing in');
 			}
+			setIsAuthenticated(true);
 			setShowModal(false);
 		} catch (error) {
 			console.error('Error signing in:', error);
@@ -124,12 +151,46 @@ const App: React.FC = () => {
 		});
 	};
 
+	const saveClickCount = (newClickCount: number) => {
+		const userId = auth.currentUser?.uid;
+		if (userId) {
+			const userRef = db.ref('users/' + userId);
+			userRef.update({
+				clickCount: newClickCount
+			}).then(() => {
+				console.log('Click count updated: ', newClickCount);
+			}).catch((error) => {
+				console.error('Error updating click count: ', error);
+			});
+		}
+	};
+	const updateClickCount = (newClickCount: number) => {
+		if (isAuthenticated) {
+			// Обновляем локальное состояние и сохраняем в базу данных Firebase
+			setAuthClickCount(newClickCount);
+			saveClickCount(newClickCount);
+		} else {
+			// Для анонимных пользователей обновляем только локальное состояние
+			setClickCount(newClickCount);
+			localStorage.setItem('clickCount', newClickCount.toString());
+		}
+	};
+
 	const handlePlayAnonymously = () => {
 		// Логика для анонимной игры
-		setIsAuthenticated(false);
-		setIsAnonymous(true);
-		setShowModal(false);
-		toast.success('Play anonymously');
+		if (!isAnonymous) {
+			if (clickCount) {
+				setClickCount(parseFloat(localStorage.clickCount));
+			}
+			setIsAuthenticated(false);
+			setIsAnonymous(true);
+			setShowModal(false);
+			toast.success('Play anonymously');
+		} else {
+			setShowModal(true);
+			setIsAnonymous(false);
+			console.log('Unplay anonymously');
+		}
 	};
 
 	const handleSignOut = () => {
@@ -179,14 +240,13 @@ const App: React.FC = () => {
 										  onClick={handlePlayAnonymously}>Play anonymously</SwitchButton>
 						</Form>
 					</Modal>
-					<Footer isAnonymous={isAnonymous} displayName={displayName} showModal={showModal}
+					<Footer handlePlayAnonymously={handlePlayAnonymously} isAnonymous={isAnonymous} displayName={displayName} showModal={showModal}
 							setShowModal={setShowModal} isDark={isDark} setIsDark={setIsDark}/>
 				</>
 			) : (
 				<>
 					<Wrapper>
-						<ClickerArea isAuthenticated={isAuthenticated} clickCount={clickCount}
-									 setClickCount={setClickCount} upgrades={upgrades}/>
+						<ClickerArea updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} clickCount={clickCount} upgrades={upgrades}/>
 					</Wrapper>
 					<Wrapper>
 						<ControlArea isDark={isDark} setClickCount={setClickCount} clickCount={clickCount}
@@ -198,7 +258,7 @@ const App: React.FC = () => {
 							<SwitchButton isDark={isDark} onClick={handleSignOut}>Sign Out</SwitchButton>
 						</Wrapper>
 					)}
-					<Footer isAnonymous={isAnonymous} displayName={displayName} showModal={showModal}
+					<Footer handlePlayAnonymously={handlePlayAnonymously} isAnonymous={isAnonymous} displayName={displayName} showModal={showModal}
 							setShowModal={setShowModal} isDark={isDark} setIsDark={setIsDark}/>
 				</>
 			)
