@@ -1,34 +1,55 @@
 import {UpgradeButton, UpgradePrice} from './UpgradeItem.styles.ts';
 import {UpgradeProps} from '../../../types.ts';
+import {toast} from 'react-toastify';
+import {useEffect} from 'react';
+export const UpgradeItem = ({isDark, text, price, clickCount, upgrades, setUpgrades, intervalId, setIntervalId, updateAvailableUpgrades, isAuthenticated, authClickCount, updateClickCount, authUpgrades, setAuthUpgrades, saveAuthUpgrades}: UpgradeProps) => {
 
-export const UpgradeItem = ({isDark, text, price, clickCount, setClickCount, upgrades, setUpgrades, intervalId, setIntervalId, updateAvailableUpgrades}: UpgradeProps) => {
+	const currentUpgrades = isAuthenticated ? authUpgrades : upgrades;
+
+	useEffect(() => {
+		localStorage.setItem('upgrades', JSON.stringify(currentUpgrades));
+	}, [currentUpgrades]);
 
 	const isUpgradePurchased = (upgradeName: string) => {
+		const currentUpgrades = isAuthenticated ? authUpgrades : upgrades;
 		if (upgradeName.startsWith('Passive click lvl.')) {
 			const match = upgradeName.match(/lvl\.(\d+)/);
 			if (match && match[1]) {
 				const level = parseInt(match[1], 10);
-				return upgrades.passiveClick >= level;
+				return currentUpgrades.passiveClick >= level;
 			}
 		} else if (upgradeName === 'X2 per click') {
-			return upgrades.x2PerClick;
+			return currentUpgrades.x2PerClick;
 		} else if (upgradeName === 'X3 per click') {
-			return upgrades.x3PerClick;
+			return currentUpgrades.x3PerClick;
 		}
 		return false;
 	};
 
-	const handlePurchase = (upgradeName: string) => {
-		if (clickCount >= price && !isUpgradePurchased(upgradeName)) {
+	const handlePurchase = async (upgradeName: string) => {
+		const setCurrentUpgrades = isAuthenticated ? setAuthUpgrades : setUpgrades;
+		const count = isAuthenticated ? authClickCount : clickCount;
+		if (count >= price && !isUpgradePurchased(upgradeName)) {
 			console.log('Покупаем улучшение');
-			setClickCount(clickCount - price);
+			updateClickCount(count - price, isAuthenticated);
 			if (upgradeName.startsWith('Passive click lvl.')) {
 				const match = upgradeName.match(/lvl\.(\d+)/);
 				if (match && match[1]) {
 					const level = parseInt(match[1]);
-					if(!isNaN(level)) {
-						console.log('Уровень улучшения обновлён');
-						setUpgrades(prev => ({...prev, passiveClick: level}))
+					console.log(level);
+					if (!isNaN(level)) {
+						if (isAuthenticated) {
+							setAuthUpgrades(prev => ({
+								...prev,
+								passiveClick: level
+							}));
+						} else {
+							setUpgrades(prev => ({
+								...prev,
+								passiveClick: level
+								// @ts-ignore
+							}))
+						}
 					} else {
 						console.log('Не удалось извлечь уровень улучшения');
 					}
@@ -36,15 +57,23 @@ export const UpgradeItem = ({isDark, text, price, clickCount, setClickCount, upg
 					console.log('Не удалось извлечь уровень улучшения');
 				}
 			} else if (upgradeName === 'X2 per click') {
+				setCurrentUpgrades(prev => ({
+					...prev,
+					x2PerClick: true,
+					x3PerClick: false
+				}));
 				console.log('Уровень улучшения обновлён');
-				setUpgrades(prev => ({...prev, x2PerClick: true, x3PerClick: false}));
 			} else if (upgradeName === 'X3 per click') {
+				setCurrentUpgrades(prev => ({
+					...prev,
+					x2PerClick: false,
+					x3PerClick: true
+				}));
 				console.log('Уровень улучшения обновлён');
-				setUpgrades(prev => ({...prev, x2PerClick: false, x3PerClick: true}));
 			}
 			updateAvailableUpgrades(upgradeName);
-		} else if (clickCount < price) {
-			console.log('u ar poor poop');
+		} else if (count < price) {
+			toast.error('u ar poor poop');
 		}
 	}
 
@@ -52,7 +81,7 @@ export const UpgradeItem = ({isDark, text, price, clickCount, setClickCount, upg
 
 	return (
 		<li>
-			<UpgradeButton disabled={isThisUpgradePurchased} onClick={() => handlePurchase(text)} text={text} price={price} clickCount={clickCount} isDark={isDark} setClickCount={setClickCount} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId} isUpgradePurchased={isThisUpgradePurchased} updateAvailableUpgrades={updateAvailableUpgrades}>
+			<UpgradeButton saveAuthUpgrades={saveAuthUpgrades} authUpgrades={authUpgrades} setAuthUpgrades={setAuthUpgrades} updateClickCount={updateClickCount} isAuthenticated={isAuthenticated} authClickCount={authClickCount} disabled={isThisUpgradePurchased} onClick={() => handlePurchase(text)} text={text} price={price} clickCount={clickCount} isDark={isDark} upgrades={upgrades} setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId} isUpgradePurchased={isThisUpgradePurchased} updateAvailableUpgrades={updateAvailableUpgrades}>
 				<div>{text}</div>
 				<UpgradePrice>{price}</UpgradePrice>
 			</UpgradeButton>

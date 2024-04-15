@@ -5,7 +5,7 @@ import {CardWrapper, CardWrapperMobile, ClickerContainer, MotionGrid, RotationWr
 import {ClickerAreaProps} from '../../types.ts';
 import {Wrapper} from '../../App.styles.ts';
 
-export const ClickerArea = ({clickCount, upgrades, authClickCount, isAuthenticated, updateClickCount}: ClickerAreaProps) => {
+export const ClickerArea = ({clickCount, upgrades, authClickCount, isAuthenticated, updateClickCount, authUpgrades}: ClickerAreaProps) => {
 	const [isMobile, setIsMobile] = useState(false);
 	// позиция курсора
 	const mouseX = useMotionValue(
@@ -16,12 +16,20 @@ export const ClickerArea = ({clickCount, upgrades, authClickCount, isAuthenticat
 	);
 
 	const handleButtonClick = () => {
-		if (upgrades.x2PerClick) {
-			isAuthenticated ? updateClickCount(authClickCount + 2) : updateClickCount(clickCount + 2);
-		} else if (upgrades.x3PerClick) {
-			isAuthenticated ? updateClickCount(authClickCount + 3) : updateClickCount(clickCount + 3);
+		// Определение текущих улучшений в зависимости от статуса аутентификации
+		const currentUpgrades = isAuthenticated ? authUpgrades : upgrades;
+		const count = isAuthenticated ? authClickCount : clickCount;
+		let newCount = count + 1;
+		if (currentUpgrades.x2PerClick) {
+			newCount = count + 2;
+		} else if (currentUpgrades.x3PerClick) {
+			newCount = count + 3;
+		}
+		// Обновление счётчика в зависимости от статуса аутентификации
+		if (isAuthenticated) {
+			updateClickCount(newCount, isAuthenticated);
 		} else {
-			isAuthenticated ? updateClickCount(authClickCount + 1) : updateClickCount(clickCount + 1);
+			updateClickCount(newCount, isAuthenticated);
 		}
 	};
 

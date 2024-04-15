@@ -8,6 +8,7 @@ import {Button} from './components/ControlArea/ControlArea.styles.ts';
 import {auth, db} from './firebase.ts';
 import {toast} from 'react-toastify';
 import CustomToastContainer from './components/CustomToastContainer/CustomToastContainer.tsx';
+import { AvailableUpgradesProps } from './types.ts';
 
 const App: React.FC = () => {
 	const [isAnonymous, setIsAnonymous] = useState(false);
@@ -19,19 +20,58 @@ const App: React.FC = () => {
 	const [showModal, setShowModal] = useState(isAuthenticated ? false : true);
 	const [authClickCount, setAuthClickCount] = useState<number>(0);
 	const [clickCount, setClickCount] = useState<number>(() => {
-		const savedClickCount = localStorage.getItem('clickCount');
-		return savedClickCount ? parseInt(savedClickCount, 10) : 0;
+		const isAuthenticated = auth.currentUser !== null;
+		if (!isAuthenticated) {
+			const storedClickCount = localStorage.getItem('clickCount');
+			return storedClickCount ? parseInt(storedClickCount, 10) : 0;
+		}
+		return 0;
 	});
 	const [isDark, setIsDark] = useState(() => {
 		const savedIsDark = localStorage.getItem('isDark');
 		return savedIsDark ? savedIsDark === 'true' : false;
 	});
 	const initialUpgrades = localStorage.getItem('upgrades');
+	const [authUpgrades, setAuthUpgrades] = useState<AvailableUpgradesProps>({
+		passiveClick: 0,
+		x2PerClick: false,
+		x3PerClick: false,
+	});
 	const [upgrades, setUpgrades] = useState(initialUpgrades ? JSON.parse(initialUpgrades) : {
 		passiveClick: 0,
 		x2PerClick: false,
 		x3PerClick: false
 	});
+
+	useEffect(() => {
+		const userId = auth.currentUser?.uid;
+		if (userId) {
+			const userRef = db.ref('users/' + userId);
+			userRef.once('value', snapshot => {
+				const userData = snapshot.val();
+				if (userData && userData.authUpgrades) {
+					const mergedUpgrades = { ...authUpgrades, ...userData.authUpgrades };
+					setAuthUpgrades(mergedUpgrades);
+					console.log(mergedUpgrades);
+				}
+			});
+		}
+	}, [auth.currentUser]);
+
+	const userId = auth.currentUser?.uid;
+	useEffect(() => {
+		const userRef = db.ref('users/' + userId);
+		const handleData = (snapshot: { val: () => any; }) => {
+			const userData = snapshot.val();
+			if (userData && userData.authUpgrades) {
+				setAuthUpgrades(userData.authUpgrades);
+			}
+		};
+
+		return () => {
+			userRef.off('value', handleData);
+		};
+	}, [userId]);
 
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -48,6 +88,16 @@ const App: React.FC = () => {
 				setIsAuthenticated(false);
 			}
 		});
+		const userId = auth.currentUser?.uid;
+		if (userId) {
+			const userRef = db.ref('users/' + userId);
+			userRef.once('value', snapshot => {
+				const userData = snapshot.val();
+				if (userData && userData.authUpgrades) {
+					setAuthUpgrades(userData.authUpgrades);
+				}
+			});
+		}
 
 		return () => unsubscribe();
 	}, []);
@@ -63,7 +113,14 @@ const App: React.FC = () => {
 				}
 			})
 		}
-	}, [isAuthenticated, authClickCount]);
+	}, [isAuthenticated]);
+
+	useEffect(() => {
+		if (auth.currentUser) {
+			saveAuthUpgrades(authUpgrades);
+			console.log('upgrades update');
+		}
+	}, [authUpgrades]);
 
 	const updateDisplayName = (newDisplayName: string) => {
 		setDisplayName(newDisplayName);
@@ -75,31 +132,33 @@ const App: React.FC = () => {
 			const user = userCredential.user;
 			if (user) {
 				updateDisplayName(displayName);
-				if (displayName.trim() !== '') { // Проверка на пустое значение или пробельные символы
+				if (displayName.trim() !== '') {
 					await user.updateProfile({
-						displayName: displayName
+						displayName: displayName,
 					});
-					await user.reload(); // Перезагрузка пользователя
-					saveUsername(displayName, user.uid);
-					toast.success(`Signed up successfully: ${user.displayName}`);
-					// Инициализация authClickCount в 0 для нового пользователя
-					updateClickCount(0);
-					console.log(`User profile updated: ${user.displayName}`);
+					await user.reload();
+
+					const userId = user.uid;
+					await db.ref('users/' + userId).set({
+						displayName: displayName,
+						email: email,
+						clickCount: 0,
+						authUpgrades: {
+							passiveClick: 0,
+							x2PerClick: false,
+							x3PerClick: false,
+						},
+					});
+					if (user) {
+						toast.success(`Signed in successfully: ${user.displayName}`);
+					} else {
+						toast.error('Error signing in');
+					}
+					setShowModal(false);
 				} else {
 					toast.error('Error: displayName is empty');
 					return;
 				}
-				// Записываем данные пользователя в базу данных Firebase, включая authClickCount
-				await db.ref('users/' + user.uid).set({
-					displayName: displayName,
-					email: email,
-					clickCount: 0 // Инициализация authClickCount в 0
-				}).then(() => {
-					console.log('User profile updated with displayName:', displayName);
-					setShowModal(false);
-				}).catch((error) => {
-					console.error('Error saving user profile to database:', error);
-				});
 			} else {
 				toast.error('Error');
 			}
@@ -119,13 +178,22 @@ const App: React.FC = () => {
 
 			if (user) {
 				console.log(user);
-				// Загрузка authClickCount из базы данных Firebase
 				const userRef = db.ref('users/' + user.uid);
 				userRef.once('value', snapshot => {
 					const userData = snapshot.val();
 					if (userData && userData.clickCount) {
 						// Обновление authClickCount в состоянии приложения
 						setAuthClickCount(userData.clickCount);
+						if (user) {
+							// Загрузка улучшений из базы данных Firebase
+							const userRef = db.ref('users/' + user.uid);
+							userRef.once('value', snapshot => {
+								const userData = snapshot.val();
+								if (userData && userData.upgrades) {
+									setAuthUpgrades(userData.authUpgrades);
+								}
+							});
+						}
 					}
 				});
 				toast.success(`Signed in successfully: ${user.displayName}`);
@@ -140,6 +208,7 @@ const App: React.FC = () => {
 		}
 	};
 
+	// @ts-ignore
 	const saveUsername = (username: any, userId: string) => {
 		const userRef = db.ref('users/' + userId);
 		userRef.update({
@@ -150,6 +219,20 @@ const App: React.FC = () => {
 			console.error('Error saving username to database:', error);
 		});
 	};
+
+	const saveAuthUpgrades = (newAuthUpgrades: AvailableUpgradesProps) => {
+		const userId = auth.currentUser?.uid;
+		if (userId) {
+			const userRef = db.ref('users/' + userId);
+			userRef.update({
+				authUpgrades: newAuthUpgrades,
+			}).then(() => {
+				console.log('authUpgrades updated: ', newAuthUpgrades);
+			}).catch((error) => {
+				console.error('Error updating authUpgrades: ', error);
+			});
+		}
+	}
 
 	const saveClickCount = (newClickCount: number) => {
 		const userId = auth.currentUser?.uid;
@@ -164,20 +247,18 @@ const App: React.FC = () => {
 			});
 		}
 	};
-	const updateClickCount = (newClickCount: number) => {
+
+	const updateClickCount = (newClickCount: number, isAuthenticated: boolean) => {
 		if (isAuthenticated) {
-			// Обновляем локальное состояние и сохраняем в базу данных Firebase
 			setAuthClickCount(newClickCount);
 			saveClickCount(newClickCount);
 		} else {
-			// Для анонимных пользователей обновляем только локальное состояние
 			setClickCount(newClickCount);
 			localStorage.setItem('clickCount', newClickCount.toString());
 		}
 	};
 
 	const handlePlayAnonymously = () => {
-		// Логика для анонимной игры
 		if (!isAnonymous) {
 			if (clickCount) {
 				setClickCount(parseFloat(localStorage.clickCount));
@@ -195,10 +276,15 @@ const App: React.FC = () => {
 
 	const handleSignOut = () => {
 		auth.signOut().then(() => {
-			console.log('User signed out');
 			setIsAuthenticated(false);
+			setAuthClickCount(0);
+			setAuthUpgrades({
+				passiveClick: 0,
+				x2PerClick: false,
+				x3PerClick: false,
+			})
 			setShowModal(true);
-			// Здесь можно добавить дополнительную логику, например, сброс состояния приложения
+			console.log('User signed out');
 		}).catch((error) => {
 			console.error('Error signing out:', error);
 		});
@@ -246,10 +332,10 @@ const App: React.FC = () => {
 			) : (
 				<>
 					<Wrapper>
-						<ClickerArea updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} clickCount={clickCount} upgrades={upgrades}/>
+						<ClickerArea authUpgrades={authUpgrades} updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} clickCount={clickCount} upgrades={upgrades}/>
 					</Wrapper>
 					<Wrapper>
-						<ControlArea isDark={isDark} setClickCount={setClickCount} clickCount={clickCount}
+						<ControlArea isAnonymous={isAnonymous} saveAuthUpgrades={saveAuthUpgrades} authUpgrades={authUpgrades} setAuthUpgrades={setAuthUpgrades} setAuthClickCount={setAuthClickCount} updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} isDark={isDark} setClickCount={setClickCount} clickCount={clickCount}
 									 upgrades={upgrades}
 									 setUpgrades={setUpgrades}/>
 					</Wrapper>
