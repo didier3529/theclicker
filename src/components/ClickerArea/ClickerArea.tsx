@@ -5,7 +5,14 @@ import {CardWrapper, CardWrapperMobile, ClickerContainer, MotionGrid, RotationWr
 import {ClickerAreaProps} from '../../types.ts';
 import {Wrapper} from '../../App.styles.ts';
 
-export const ClickerArea = ({clickCount, upgrades, authClickCount, isAuthenticated, updateClickCount, authUpgrades}: ClickerAreaProps) => {
+export const ClickerArea = ({
+								clickCount,
+								upgrades,
+								authClickCount,
+								isAuthenticated,
+								updateClickCount,
+								authUpgrades
+							}: ClickerAreaProps) => {
 	const [isMobile, setIsMobile] = useState(false);
 	// позиция курсора
 	const mouseX = useMotionValue(
@@ -52,7 +59,9 @@ export const ClickerArea = ({clickCount, upgrades, authClickCount, isAuthenticat
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove);
 			window.removeEventListener('resize', checkScreenWidth);
-			document.addEventListener("touchstart", function(){}, true);window.addEventListener('resize', checkScreenWidth);
+			document.addEventListener('touchstart', function () {
+			}, true);
+			window.addEventListener('resize', checkScreenWidth);
 		};
 	}, []);
 
@@ -86,9 +95,14 @@ export const ClickerArea = ({clickCount, upgrades, authClickCount, isAuthenticat
 							<CardButton handleButtonClick={handleButtonClick}/>
 						</CardWrapper>
 					</RotationWrapper>
+
 				)}
 				<Wrapper>
-					<p style={{marginBottom: '15px', fontSize: '2em', textAlign: 'center'}}>{isAuthenticated ? authClickCount : clickCount}</p>
+					<p style={{
+						marginBottom: '15px',
+						fontSize: '2em',
+						textAlign: 'center'
+					}}>{isAuthenticated ? authClickCount : clickCount}</p>
 					<hr className="hr" style={{
 						padding: '0px',
 						margin: '0px',

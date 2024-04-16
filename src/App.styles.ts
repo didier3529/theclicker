@@ -22,6 +22,29 @@ export const Wrapper = styled.div`
 	}
 `;
 
+export const LogoWrapper = styled.div`
+	@media screen and (max-width: 600px) {
+		margin-top: 4em;
+	}
+	margin-top: 9em;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+`
+
+export const AppWrapper = styled.div`
+	@media screen and (max-width: 600px) {
+		margin-bottom: 25%;
+	}
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+`
+
 export const Input = styled.input`
 	-webkit-text-size-adjust: 100%;
 	padding: 10px;
@@ -65,9 +88,9 @@ export const SwitchButton = styled.button<ButtonProps>`
 
 export const Form = styled.form`
 	@media screen and (max-width: 450px) {
-		padding-top: 18%
+		padding-top: 3%
 	}
-	padding-top: 25%;
+	padding-top: 3%;
 	display: flex;
 	align-items: center;
 	flex-direction: column;

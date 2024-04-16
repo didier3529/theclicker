@@ -1,22 +1,46 @@
-import {Button, ControlAreaWrapper, UpgradeList} from './ControlArea.styles.ts';
+import {
+	Button,
+	ControlAreaWrapper,
+	ModalContentWrapper,
+	UpgradeList,
+	UpgradeListWrapper
+} from './ControlArea.styles.ts';
 import {AvailableUpgradesProps, ControlAreaProps} from '../../types.ts';
 import {Modal} from '../Modal/Modal.tsx';
 import {useEffect, useRef, useState} from 'react';
 import {UpgradeItem} from './UpgradeItem/UpgradeItem.tsx';
 import {auth, db} from '../../firebase.ts';
+import {RatingTable} from '../RatingTable/RatingTable.tsx';
+import {Wrapper} from '../../App.styles.ts';
 
-export const ControlArea = ({setClickCount, isDark, clickCount, upgrades, setUpgrades, isAuthenticated, authClickCount, updateClickCount, setAuthClickCount, authUpgrades, setAuthUpgrades, saveAuthUpgrades, isAnonymous}: ControlAreaProps) => {
+export const ControlArea = ({
+								setClickCount,
+								isDark,
+								clickCount,
+								upgrades,
+								setUpgrades,
+								isAuthenticated,
+								authClickCount,
+								updateClickCount,
+								setAuthClickCount,
+								authUpgrades,
+								setAuthUpgrades,
+								saveAuthUpgrades,
+								isAnonymous,
+								isMobile,
+								ratingTableData
+							}: ControlAreaProps) => {
 	const initialAvailableUpgrades = localStorage.getItem('availableUpgrades');
 	// @ts-ignore
 	const [authAvailableUpgrades, setAuthAvailableUpgrades] = useState<AvailableUpgradesProps>({
 		passiveClick: 1,
 		x2PerClick: false,
-		x3PerClick: false,
+		x3PerClick: false
 	});
 	const [availableUpgrades, setAvailableUpgrades] = useState<AvailableUpgradesProps>(initialAvailableUpgrades ? JSON.parse(initialAvailableUpgrades) : {
 		passiveClick: 1,
 		x2PerClick: false,
-		x3PerClick: false,
+		x3PerClick: false
 	});
 	const [modalType, setModalType] = useState<string | null>(null);
 	const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
@@ -37,7 +61,7 @@ export const ControlArea = ({setClickCount, isDark, clickCount, upgrades, setUpg
 
 	useEffect(() => {
 		localStorage.setItem('availableUpgrades', JSON.stringify(availableUpgrades));
-	}, [availableUpgrades])
+	}, [availableUpgrades]);
 
 	useEffect(() => {
 		if (!isAuthenticated) {
@@ -46,10 +70,9 @@ export const ControlArea = ({setClickCount, isDark, clickCount, upgrades, setUpg
 	}, [upgrades]);
 
 	useEffect(() => {
-		if (currentUpgrades.passiveClick > 0 ) {
+		if (currentUpgrades.passiveClick > 0) {
 			intervalRef.current = setInterval(() => {
 				updateClickCount(count += 1, isAuthenticated);
-				console.log('click');
 			}, 3000 / currentUpgrades.passiveClick);
 
 			return () => {
@@ -64,7 +87,6 @@ export const ControlArea = ({setClickCount, isDark, clickCount, upgrades, setUpg
 	useEffect(() => {
 		const userId = auth.currentUser?.uid;
 		if (userId) {
-			// Загрузка authUpgrades из Firebase для аутентифицированных пользователей
 			const userRef = db.ref('users/' + userId);
 			userRef.once('value', snapshot => {
 				const userData = snapshot.val();
@@ -76,12 +98,36 @@ export const ControlArea = ({setClickCount, isDark, clickCount, upgrades, setUpg
 		}
 	}, [auth.currentUser]);
 
-	const handleNewGame = () => {
+	const handleNewGame = async () => {
 		if (isAuthenticated) {
-			setAuthClickCount(0);
+			try {
+				setAuthClickCount(0);
+				setAuthUpgrades({
+					passiveClick: 0,
+					x2PerClick: false,
+					x3PerClick: false
+				});
+				const userId = auth.currentUser?.uid;
+				await db.ref('users/' + userId + '/authUpgrades').update({
+						passiveClick: 0,
+						x2PerClick: false,
+						x3PerClick: false,
+				});
+				await db.ref('users/' + userId).update({
+					clickCount: 0,
+				});
+			} catch {
+				console.error('error');
+			}
+		} else {
+			setClickCount(0);
+			setUpgrades({
+				passiveClick: 0,
+				x2PerClick: false,
+				x3PerClick: false
+			})
 		}
 		setModalType(null);
-		setClickCount(0);
 	};
 
 	const updateAvailableUpgrades = (upgradeName: string) => {
@@ -133,40 +179,79 @@ export const ControlArea = ({setClickCount, isDark, clickCount, upgrades, setUpg
 			{modalType === 'upgrades' && (
 				<>
 					<h2>Upgrades:</h2>
-					<UpgradeList>
-						<UpgradeItem saveAuthUpgrades={saveAuthUpgrades} setAuthUpgrades={setAuthUpgrades} authUpgrades={authUpgrades} updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} key={0} text={'Passive click lvl.1'} price={1000} isDark={isDark}
-									 clickCount={clickCount} upgrades={upgrades}
-									 setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}
-									 updateAvailableUpgrades={updateAvailableUpgrades}/>
-						<UpgradeItem saveAuthUpgrades={saveAuthUpgrades} setAuthUpgrades={setAuthUpgrades} authUpgrades={authUpgrades} updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} key={1} text={'Passive click lvl.2'} price={10000} isDark={isDark}
-									 clickCount={clickCount} upgrades={upgrades}
-									 setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}
-									 updateAvailableUpgrades={updateAvailableUpgrades}/>
-						<UpgradeItem saveAuthUpgrades={saveAuthUpgrades} setAuthUpgrades={setAuthUpgrades} authUpgrades={authUpgrades} updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} key={2} text={'Passive click lvl.3'} price={100000} isDark={isDark}
-									 clickCount={clickCount} upgrades={upgrades}
-									 setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}
-									 updateAvailableUpgrades={updateAvailableUpgrades}/>
+					<ModalContentWrapper>
+						<UpgradeListWrapper>
 
-						<UpgradeItem saveAuthUpgrades={saveAuthUpgrades} setAuthUpgrades={setAuthUpgrades} authUpgrades={authUpgrades} updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} key={3} text={'X2 per click'} price={100000} isDark={isDark}
-									 clickCount={clickCount} upgrades={upgrades}
-									 setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}
-									 updateAvailableUpgrades={updateAvailableUpgrades}/>
-						<UpgradeItem saveAuthUpgrades={saveAuthUpgrades} setAuthUpgrades={setAuthUpgrades} authUpgrades={authUpgrades} updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} key={4} text={'X3 per click'} price={1000000} isDark={isDark}
-									 clickCount={clickCount} upgrades={upgrades}
-									 setUpgrades={setUpgrades} intervalId={intervalId} setIntervalId={setIntervalId}
-									 updateAvailableUpgrades={updateAvailableUpgrades}/>
-					</UpgradeList>
-					<Button style={{padding: '0.2em', width: '4.5em', fontSize: '1.2em', margin: 'auto'}} isDark={isDark}
+							<UpgradeList>
+								<UpgradeItem saveAuthUpgrades={saveAuthUpgrades} setAuthUpgrades={setAuthUpgrades}
+											 authUpgrades={authUpgrades} updateClickCount={updateClickCount}
+											 authClickCount={authClickCount} isAuthenticated={isAuthenticated} key={0}
+											 text={'Passive click lvl.1'} price={1000} isDark={isDark}
+											 clickCount={clickCount} upgrades={upgrades}
+											 setUpgrades={setUpgrades} intervalId={intervalId}
+											 setIntervalId={setIntervalId}
+											 updateAvailableUpgrades={updateAvailableUpgrades}/>
+								<UpgradeItem saveAuthUpgrades={saveAuthUpgrades} setAuthUpgrades={setAuthUpgrades}
+											 authUpgrades={authUpgrades} updateClickCount={updateClickCount}
+											 authClickCount={authClickCount} isAuthenticated={isAuthenticated} key={1}
+											 text={'Passive click lvl.2'} price={10000} isDark={isDark}
+											 clickCount={clickCount} upgrades={upgrades}
+											 setUpgrades={setUpgrades} intervalId={intervalId}
+											 setIntervalId={setIntervalId}
+											 updateAvailableUpgrades={updateAvailableUpgrades}/>
+								<UpgradeItem saveAuthUpgrades={saveAuthUpgrades} setAuthUpgrades={setAuthUpgrades}
+											 authUpgrades={authUpgrades} updateClickCount={updateClickCount}
+											 authClickCount={authClickCount} isAuthenticated={isAuthenticated} key={2}
+											 text={'Passive click lvl.3'} price={100000} isDark={isDark}
+											 clickCount={clickCount} upgrades={upgrades}
+											 setUpgrades={setUpgrades} intervalId={intervalId}
+											 setIntervalId={setIntervalId}
+											 updateAvailableUpgrades={updateAvailableUpgrades}/>
+
+								<UpgradeItem saveAuthUpgrades={saveAuthUpgrades} setAuthUpgrades={setAuthUpgrades}
+											 authUpgrades={authUpgrades} updateClickCount={updateClickCount}
+											 authClickCount={authClickCount} isAuthenticated={isAuthenticated} key={3}
+											 text={'X2 per click'} price={100000} isDark={isDark}
+											 clickCount={clickCount} upgrades={upgrades}
+											 setUpgrades={setUpgrades} intervalId={intervalId}
+											 setIntervalId={setIntervalId}
+											 updateAvailableUpgrades={updateAvailableUpgrades}/>
+								<UpgradeItem saveAuthUpgrades={saveAuthUpgrades} setAuthUpgrades={setAuthUpgrades}
+											 authUpgrades={authUpgrades} updateClickCount={updateClickCount}
+											 authClickCount={authClickCount} isAuthenticated={isAuthenticated} key={4}
+											 text={'X3 per click'} price={1000000} isDark={isDark}
+											 clickCount={clickCount} upgrades={upgrades}
+											 setUpgrades={setUpgrades} intervalId={intervalId}
+											 setIntervalId={setIntervalId}
+											 updateAvailableUpgrades={updateAvailableUpgrades}/>
+							</UpgradeList>
+						</UpgradeListWrapper>
+						{!isMobile && (
+							<Wrapper>
+								<RatingTable ratingTableData={ratingTableData} authClickCount={authClickCount}/>
+							</Wrapper>
+						)}
+					</ModalContentWrapper>
+					<Button style={{padding: '0.2em', width: '4.5em', fontSize: '1.2em', margin: 'auto'}}
+							isDark={isDark}
 							onClick={() => setModalType(null)}>
 						{`<-Back`}
 					</Button>
+					{isMobile && (
+						<Wrapper style={{marginTop: '1.5em'}}>
+							<RatingTable ratingTableData={ratingTableData} authClickCount={authClickCount}/>
+						</Wrapper>
+					)}
 				</>
 			)}
 		</Modal>
 	) : (
-		<ControlAreaWrapper>
-			<Button isDark={isDark} onClick={() => setModalType('upgrades')}>Upgrades</Button>
-			<Button isDark={isDark} onClick={() => setModalType('newGame')}>New game</Button>
-		</ControlAreaWrapper>
+		<Wrapper>
+			<ControlAreaWrapper style={{marginBottom: '1.5em'}}>
+				<Button isDark={isDark} onClick={() => setModalType('upgrades')}>Upgrades</Button>
+				<Button isDark={isDark} onClick={() => setModalType('newGame')}>New game</Button>
+			</ControlAreaWrapper>
+			<RatingTable ratingTableData={ratingTableData} authClickCount={authClickCount}/>
+		</Wrapper>
 	);
 };

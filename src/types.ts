@@ -6,6 +6,11 @@ export type ButtonProps = {
 	onClick?: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent> | void) => void;
 };
 
+export type RatingTableProps = {
+	authClickCount: number;
+	ratingTableData: any[];
+}
+
 export type AvailableUpgradesProps = {
 	passiveClick: number;
 	x2PerClick: boolean;
@@ -46,6 +51,8 @@ export type ControlAreaProps = {
 	authUpgrades: AvailableUpgradesProps;
 	saveAuthUpgrades: (newAuthUpgrades: AvailableUpgradesProps) => void;
 	isAnonymous: boolean;
+	isMobile: boolean;
+	ratingTableData: any[];
 }
 
 export type ClickerAreaProps = {
@@ -54,7 +61,11 @@ export type ClickerAreaProps = {
 	isAuthenticated: boolean;
 	authClickCount: number;
 	updateClickCount: (arg0: number, arg1: boolean) => void;
-	authUpgrades: AvailableUpgradesProps
+	authUpgrades: AvailableUpgradesProps;
+}
+
+export type FooterAppProps = {
+	isDark: boolean;
 }
 
 export type FooterProps = {

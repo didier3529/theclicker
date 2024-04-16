@@ -6,6 +6,17 @@ export const UpgradeList = styled.ul`
 	padding: 0;
 `
 
+export const ModalContentWrapper = styled.div`
+	display: flex;
+	align-items: flex-start; 
+`;
+
+export const UpgradeListWrapper = styled.div`
+	flex: 0 0 auto; 
+	margin-right: 20px; 
+	width: 100%;
+`;
+
 export const ControlAreaWrapper = styled.div`
 	display: flex;
 	flex-direction: row;

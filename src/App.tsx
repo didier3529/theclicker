@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Input, SwitchButton, Wrapper} from './App.styles.ts'; // стили
+import {AppWrapper, Form, Input, LogoWrapper, SwitchButton, Wrapper} from './App.styles.ts'; // стили
 import {ClickerArea} from './components/ClickerArea/ClickerArea.tsx';
 import {ControlArea} from './components/ControlArea/ControlArea.tsx';
 import {Footer} from './components/Footer/Footer.tsx';
@@ -9,8 +9,12 @@ import {auth, db} from './firebase.ts';
 import {toast} from 'react-toastify';
 import CustomToastContainer from './components/CustomToastContainer/CustomToastContainer.tsx';
 import { AvailableUpgradesProps } from './types.ts';
+import {RatingTable} from './components/RatingTable/RatingTable.tsx';
+import {FooterAppWrapper} from './components/Footer/Footer.styles.ts';
 
 const App: React.FC = () => {
+	const [ratingTableData, setRatingTableData] = useState<any[]>([]);
+	const [isMobile, setIsMobile] = useState(false);
 	const [isAnonymous, setIsAnonymous] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [email, setEmail] = useState('');
@@ -42,6 +46,32 @@ const App: React.FC = () => {
 		x2PerClick: false,
 		x3PerClick: false
 	});
+
+	useEffect(() => {
+		const usersRef = db.ref('users/');
+		usersRef.once('value', (snapshot) => {
+			const userData = snapshot.val();
+			const users = [];
+			for (const userId in userData) {
+				if (Object.hasOwnProperty.call(userData, userId)) {
+					const username = userData[userId].displayName;
+					const userClick = userData[userId].clickCount || 0;
+					users.push({ username, userClick });
+				}
+			}
+			users.sort((a, b) => b.userClick - a.userClick);
+			setRatingTableData(users);
+		});
+	}, []);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth <= 768);
+		};
+		window.addEventListener('resize', handleResize);
+		handleResize();
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 
 	useEffect(() => {
 		const userId = auth.currentUser?.uid;
@@ -300,34 +330,52 @@ const App: React.FC = () => {
 	});
 
 	return (
-		<>
+		<AppWrapper>
 			<CustomToastContainer/>
 			{showModal ? (
 				<>
 					<Modal modalIsOpen={showModal} setModalIsOpen={() => setShowModal(false)}
 						   onClose={() => setShowModal(false)}>
-						<Form onSubmit={handleNameSubmit}>
+						<LogoWrapper>
 							<img alt="boykisser-tapping" src={'/images/boykisser-tapping.png'}
 								 onClick={(event) => event.stopPropagation()}/>
-							{isRegistering && (
-								<Input type="text" name="input" className={'input'} placeholder="Enter ur nickname here"
-									   value={displayName} onChange={(event) => setDisplayName(event.target.value)}/>
-							)}
-							<Input autoComplete="off" type="email" name="input" className={'input'}
-								   placeholder="Enter ur email here"
-								   value={email} onChange={(event) => setEmail(event.target.value)}/>
-							<Input type="password" name="input" className={'input'} placeholder="Enter ur password here"
-								   value={password} onChange={(event) => setPassword(event.target.value)}/>
-							<Button isDark={isDark} type="submit">{isRegistering ? 'Sign Up' : 'Sign In'}</Button>
-							<SwitchButton type="button" isDark={isDark}
-										  onClick={() => setIsRegistering(!isRegistering)}>Switch
-								to {isRegistering ? 'Sign In' : 'Sign Up'}</SwitchButton>
-							<SwitchButton style={{margin: '0em'}} type="button" isDark={isDark}
-										  onClick={handlePlayAnonymously}>Play anonymously</SwitchButton>
-						</Form>
+						</LogoWrapper>
+							<Form onSubmit={handleNameSubmit}>
+								<Wrapper style={{flexDirection: 'row'}}>
+									<Wrapper>
+										{isRegistering && (
+											<Input type="text" name="input" className={'input'} placeholder="Enter ur nickname here"
+												   value={displayName} onChange={(event) => setDisplayName(event.target.value)}/>
+										)}
+										<Input autoComplete="off" type="email" name="input" className={'input'}
+											   placeholder="Enter ur email here"
+											   value={email} onChange={(event) => setEmail(event.target.value)}/>
+										<Input type="password" name="input" className={'input'} placeholder="Enter ur password here"
+											   value={password} onChange={(event) => setPassword(event.target.value)}/>
+									</Wrapper>
+										{!isMobile && (
+											<Wrapper>
+												<RatingTable ratingTableData={ratingTableData} authClickCount={authClickCount}/>
+											</Wrapper>
+										)}
+								</Wrapper>
+								<Button isDark={isDark} type="submit">{isRegistering ? 'Sign Up' : 'Sign In'}</Button>
+								<SwitchButton type="button" isDark={isDark}
+											  onClick={() => setIsRegistering(!isRegistering)}>Switch
+									to {isRegistering ? 'Sign In' : 'Sign Up'}</SwitchButton>
+								<SwitchButton style={{margin: '0em'}} type="button" isDark={isDark}
+											  onClick={handlePlayAnonymously}>Play anonymously</SwitchButton>
+							</Form>
+						{isMobile && (
+							<Wrapper style={{marginTop: '1.5em'}}>
+								<RatingTable ratingTableData={ratingTableData} authClickCount={authClickCount}/>
+							</Wrapper>
+						)}
 					</Modal>
-					<Footer handlePlayAnonymously={handlePlayAnonymously} isAnonymous={isAnonymous} displayName={displayName} showModal={showModal}
-							setShowModal={setShowModal} isDark={isDark} setIsDark={setIsDark}/>
+					<FooterAppWrapper isDark={isDark}>
+						<Footer handlePlayAnonymously={handlePlayAnonymously} isAnonymous={isAnonymous} displayName={displayName} showModal={showModal}
+								setShowModal={setShowModal} isDark={isDark} setIsDark={setIsDark}/>
+					</FooterAppWrapper>
 				</>
 			) : (
 				<>
@@ -335,7 +383,7 @@ const App: React.FC = () => {
 						<ClickerArea authUpgrades={authUpgrades} updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} clickCount={clickCount} upgrades={upgrades}/>
 					</Wrapper>
 					<Wrapper>
-						<ControlArea isAnonymous={isAnonymous} saveAuthUpgrades={saveAuthUpgrades} authUpgrades={authUpgrades} setAuthUpgrades={setAuthUpgrades} setAuthClickCount={setAuthClickCount} updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} isDark={isDark} setClickCount={setClickCount} clickCount={clickCount}
+						<ControlArea ratingTableData={ratingTableData} isMobile={isMobile} isAnonymous={isAnonymous} saveAuthUpgrades={saveAuthUpgrades} authUpgrades={authUpgrades} setAuthUpgrades={setAuthUpgrades} setAuthClickCount={setAuthClickCount} updateClickCount={updateClickCount} authClickCount={authClickCount} isAuthenticated={isAuthenticated} isDark={isDark} setClickCount={setClickCount} clickCount={clickCount}
 									 upgrades={upgrades}
 									 setUpgrades={setUpgrades}/>
 					</Wrapper>
@@ -344,12 +392,14 @@ const App: React.FC = () => {
 							<SwitchButton isDark={isDark} onClick={handleSignOut}>Sign Out</SwitchButton>
 						</Wrapper>
 					)}
-					<Footer handlePlayAnonymously={handlePlayAnonymously} isAnonymous={isAnonymous} displayName={displayName} showModal={showModal}
-							setShowModal={setShowModal} isDark={isDark} setIsDark={setIsDark}/>
+					<FooterAppWrapper isDark={isDark}>
+						<Footer handlePlayAnonymously={handlePlayAnonymously} isAnonymous={isAnonymous} displayName={displayName} showModal={showModal}
+								setShowModal={setShowModal} isDark={isDark} setIsDark={setIsDark}/>
+					</FooterAppWrapper>
 				</>
 			)
 			}
-		</>
+		</AppWrapper>
 	);
 };
 
