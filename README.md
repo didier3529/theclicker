@@ -2,7 +2,9 @@
 <h1><b>🤍Boykisser-clicker🤍</b></h1>
   <img src="https://github.com/mi1sh/boykisser-clicker/assets/106558234/ff3ded83-9801-4f6e-918f-5c842f115664"/>
   <h6><i>(could I uhh ummm could I get a :3 in the chat)</i></h6>
-  <a href='https://boykisser-clicker.vercel.app/'><b>PLAY</b></a>
+
+[![PLAY](https://img.shields.io/badge/CLICK%20TO%20PLAY-fffafa)](https://boykisser-clicker.vercel.app/)
+[![LICENSE](https://img.shields.io/github/license/mi1sh/typespeed-test?color=fffafa)](https://github.com/mi1sh/boykisser-clicker/blob/main/LICENSE)
 </div>
 
 ## **❔How to play**
