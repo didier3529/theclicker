@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 export const ClickerButton = styled.button`
 	width: 20em;
 	height: 22em;
-	background-image: url('/images/boykisser.png');
+		background-image: url('/images/pump-logo.png');
 	background-size: 22em;
 	background-position: bottom;
 	background-repeat: no-repeat;
